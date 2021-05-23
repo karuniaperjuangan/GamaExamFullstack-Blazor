@@ -1,0 +1,64 @@
+﻿@using GamaExamFullstack.Data
+
+@page "/edit/participants/{id}"
+
+@inject CustomHttpClient Http
+@inject NavigationManager NavigationManager
+@inject AppSettingsService AppSettingsService
+@inject IMatToaster Toaster
+
+<h3>Edit Creator</h3>
+
+<div>
+    <MatCard Class="matcard-centered" Style="box-shadow: 10px">
+        <MatHeadline6 Class="text-center">Edit Participants</MatHeadline6>
+        <MatTextField @bind-Value="@participants.username" Label="Username"></MatTextField>
+        <p></p>
+        <MatTextField @bind-Value="@participants.name" Label="Name"></MatTextField>
+        <p></p>
+        <MatTextField @bind-Value="@participants.institute" Label="Institute"></MatTextField>
+        <p></p>
+        <MatTextField @bind-Value="@participants.password" Label="Password" Type="password"></MatTextField>
+        <p></p>
+        <div class="d-inline-block">
+            <MatButton Raised="true" OnClick="@UpdateParticipant" Style="float:left;">Edit</MatButton>
+            <MatButton Raised="true" OnClick="@Cancel" Style="float:right">Cancel</MatButton>
+
+        </div>
+
+    </MatCard>
+</div>
+
+@code {
+    [Parameter]
+    public string id { get; set; }
+
+    DParticipant participants = new DParticipant();
+
+    protected override async Task OnInitializedAsync()
+    {
+        participants = await Http.GetJsonAsync<DParticipant>("https://localhost:5001/api/DParticipants/" + id);
+    }
+
+    protected async Task UpdateParticipant()
+    {
+        if (participants.username != null && participants.name != null && participants.password != null && participants.institute != null)
+        {
+            await Http.PutJsonAsync("https://localhost:5001/api/DParticipants/" + id, participants);
+            NavigationManager.NavigateTo("listparticipants");
+        }
+        else Toaster.Add("Please do not leave any field empty", MatToastType.Danger);
+
+    }
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("listparticipants");
+    }
+
+    protected async Task Delete()
+    {
+        await Http.DeleteAsync("https://localhost:5001/api/DParticipants/" + id);
+        NavigationManager.NavigateTo("listparticipants", forceLoad: true);
+    }
+
+    }

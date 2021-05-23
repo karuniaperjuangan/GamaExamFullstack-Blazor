@@ -3,6 +3,7 @@
 @page "/listcreators"
 
 @inject CustomHttpClient Http
+@inject NavigationManager NavigationManager
 @inject AppSettingsService AppSettingsService
 
 <MatH3 class="mat-subtitle1">Creators List</MatH3>
@@ -16,23 +17,33 @@
         <th>Username</th>
         <th>Name</th>
         <th>Institute</th>
+        <th>Edit/Delete</th>
     </MatTableHeader>
     <MatTableRow>
         <td>@context.Id</td>
         <td>@context.username</td>
         <td>@context.name</td>
         <td>@context.institute</td>
+        <td>
+            <MatButton Link=@("/edit/creator/"+context.Id) Raised="true">Edit</MatButton>
+            <MatButton OnClick="()=>Delete(context.Id)" Raised="true">Delete</MatButton>
+        </td>
     </MatTableRow>
 </MatTable>
 
 
-    @code {
-        DCreator[] creators;
-        string baseUrl;
-        protected override async Task OnInitializedAsync()
-        {
-            baseUrl = AppSettingsService.GetBaseUrl();
-            creators = await Http.GetJsonAsync<DCreator[]>("https://localhost:5001/api/DCreators");
-        }
-
+@code {
+    DCreator[] creators;
+    string baseUrl;
+    protected override async Task OnInitializedAsync()
+    {
+        baseUrl = AppSettingsService.GetBaseUrl();
+        creators = await Http.GetJsonAsync<DCreator[]>("https://localhost:5001/api/DCreators");
     }
+
+    protected async Task Delete(int Id)
+    {
+        await Http.DeleteAsync("https://localhost:5001/api/DCreators/" + Convert.ToString(Id));
+        NavigationManager.NavigateTo("listcreators", forceLoad: true);
+    }
+}
