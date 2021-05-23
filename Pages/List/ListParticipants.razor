@@ -1,0 +1,38 @@
+﻿@using GamaExamFullstack.Data
+
+@page "/listparticipants"
+
+@inject CustomHttpClient Http
+@inject AppSettingsService AppSettingsService
+
+<MatH3 class="mat-subtitle1">Creators List</MatH3>
+
+<MatDivider Padded="true"></MatDivider>
+
+<MatButton Link="/register/participants">Register New Participants</MatButton>
+<MatTable Items="@participants" class="mat-elevation-z5">
+    <MatTableHeader>
+        <th>Id</th>
+        <th>Username</th>
+        <th>Name</th>
+        <th>Institute</th>
+    </MatTableHeader>
+    <MatTableRow>
+        <td>@context.Id</td>
+        <td>@context.username</td>
+        <td>@context.name</td>
+        <td>@context.institute</td>
+    </MatTableRow>
+</MatTable>
+
+
+    @code {
+        DParticipant[] participants;
+        string baseUrl;
+        protected override async Task OnInitializedAsync()
+        {
+            baseUrl = AppSettingsService.GetBaseUrl();
+            participants = await Http.GetJsonAsync<DParticipant[]>("https://localhost:5001/api/DParticipants");
+        }
+
+    }

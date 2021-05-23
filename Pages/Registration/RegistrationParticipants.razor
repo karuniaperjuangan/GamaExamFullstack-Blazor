@@ -1,0 +1,61 @@
+﻿@using GamaExamFullstack.Data
+
+@page "/register/participants"
+
+@inject CustomHttpClient Http
+@inject NavigationManager NavigationManager
+@inject AppSettingsService AppSettingsService
+@inject IMatToaster Toaster
+
+
+<style>
+    .matcard-centered {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        padding: 20px;
+        width: 450px;
+    }
+</style>
+
+
+<div>
+    <MatCard Class="matcard-centered" Style="box-shadow: 10px">
+        <MatHeadline6 Class="text-center">Participant Registration</MatHeadline6>
+        <MatTextField @bind-Value="@participants.username" Label="Username"></MatTextField>
+        <p></p>
+        <MatTextField @bind-Value="@participants.name" Label="Name"></MatTextField>
+        <p></p>
+        <MatTextField @bind-Value="@participants.institute" Label="Institute"></MatTextField>
+        <p></p>
+        <MatTextField @bind-Value="@participants.password" Label="Password" Type="password"></MatTextField>
+        <p></p>
+        <div class="d-inline-block">
+            <MatButton Raised="true" OnClick="@RegisterCreator" Style="float:left;">Create Account</MatButton>
+            <MatButton Raised="true" OnClick="@Cancel" Style="float:right;">Cancel</MatButton>
+        </div>
+
+    </MatCard>
+</div>
+
+
+@code {
+    DParticipant participants = new DParticipant();
+
+
+    protected async Task RegisterCreator()
+    {
+        if (participants.username != null && participants.name != null && participants.password != null && participants.institute != null)
+        {
+            await Http.PostJsonAsync("https://localhost:5001/api/DParticipants", participants);
+            NavigationManager.NavigateTo("listcreators");
+        }
+        else Toaster.Add("Please do not leave any field empty", MatToastType.Danger);
+
+    }
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("listcreators");
+    }
+
+}
