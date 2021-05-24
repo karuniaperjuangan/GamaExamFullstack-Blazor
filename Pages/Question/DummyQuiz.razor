@@ -1,0 +1,64 @@
+﻿@using GamaExamFullstack.Data
+
+@page "/dummyquiz"
+
+@inject CustomHttpClient Http
+@inject NavigationManager NavigationManager
+@inject AppSettingsService AppSettingsService
+@inject IMatToaster Toaster
+
+
+
+
+<div>
+    <div class="row">
+        <div class="col-lg-8 mb-4">
+            <MatCard >
+                <MatH2>@NamaKontes</MatH2>
+                <MatH2>Soal No 12</MatH2>
+                <MatH6>@question.QuestionText</MatH6>
+                <MatRadioGroup @bind-Value="@chosenAnswer" TValue="char">
+                    <MatRadioButton Value="@('A')" TValue="char">@question.Answers_A</MatRadioButton>
+                    <MatRadioButton Value="@('B')" TValue="char">@question.Answers_B</MatRadioButton>
+                    <MatRadioButton Value="@('C')" TValue="char">@question.Answers_C</MatRadioButton>
+                    <MatRadioButton Value="@('D')" TValue="char">@question.Answers_D</MatRadioButton>
+                    <MatRadioButton Value="@('E')" TValue="char">@question.Answers_E</MatRadioButton>
+                </MatRadioGroup>
+            </MatCard>
+        </div>
+        <div class="col-lg-4">
+            <div class="mat-elevation-z4 " style="width:300px;">
+                @{IEnumerable<int> NumberCount = Enumerable.Range(0, NumofQuestion); }
+                @foreach (int number in NumberCount)
+                {
+                    <MatButton Raised="true" Class="pilih">@(number+1)&nbsp;</MatButton>
+                }
+            </div>
+            <div class="col-lg-4 mat-elevation-z4">
+                <p>5000</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+@{
+    question.QuestionText = "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Veniam, iure accusantium. " +
+    "Quam cumque veritatis obcaecati at veniam, unde esse reiciendis quae, nam, est sint corporis porro minus beatae harum? Ad?";
+    question.Answers_A = "This is Answer A Lorem, ipsum dolor sit amet consectetur adipisicing elit. Veniam, iure accusantium.";
+    question.Answers_B = "This is Answer B Lorem, ipsum dolor sit amet consectetur adipisicing elit. Veniam, iure accusantium.";
+    question.Answers_C = "This is Answer C Lorem, ipsum dolor sit amet consectetur adipisicing elit. Veniam, iure accusantium.";
+    question.Answers_D = "This is Answer D Lorem, ipsum dolor sit amet consectetur adipisicing elit. Veniam, iure accusantium.";
+    question.Answers_E = "This is Answer E Lorem, ipsum dolor sit amet consectetur adipisicing elit. Veniam, iure accusantium.";
+}
+
+@code {
+
+    int NumofQuestion = 100;
+    string NamaKontes = "Matematika";
+    Question question = new Question();
+
+    char chosenAnswer;
+
+}

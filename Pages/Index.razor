@@ -1,9 +1,44 @@
-﻿
+﻿@using GamaExamFullstack.Data
 
 @page "/"
 
-    <h1>Hello, world!</h1>
+@inject CustomHttpClient Http
+@inject NavigationManager NavigationManager
+@inject AppSettingsService AppSettingsService
+@inject IMatToaster Toaster
 
-    Welcome to your new app.
+<div>
+    <MatPaper Style="background-color:white;box-shadow: 10px;" Class="matcard-centered">
+        <MatTabGroup>
+            <MatTab Label="Participant">
+                <MatH6 Class="text-center">Participant Registration</MatH6>
+                <MatTextField @bind-Value="@participant.username" Label="Username" Class="mt-1" FullWidth="true"></MatTextField>
+                <p></p>
+                <MatTextField @bind-Value="@participant.password" Label="Password" Type="password" Class="mt-1" FullWidth="true"></MatTextField>
+                <p></p>
+                <div class="d-inline">
+                    <MatButtonLink Href="/register/participants" Style="float:left;">Not Registered?</MatButtonLink>
+                    <MatButton Raised="true" OnClick="@Login" Style="float:right;">Login</MatButton>
+                </div>
+            </MatTab>
+            <MatTab Label="Creator">
+                <MatH6 Class="text-center">Creator Registration</MatH6>
+                <MatTextField @bind-Value="@creator.username" Label="Username" Class="mt-md-2" FullWidth="true"></MatTextField>
+                <p></p>
+                <MatTextField @bind-Value="@creator.password" Label="Password" Type="password" Class="mt-1" FullWidth="true"></MatTextField>
+                <p></p>
+                <div class="d-inline">
+                    <MatButtonLink Href="/register/creator" Style="float:left;">Not Registered?</MatButtonLink>
+                    <MatButton Raised="true" OnClick="@Login" Style="float:right;">Login</MatButton>
+                </div>
+            </MatTab>
+        </MatTabGroup>
+    </MatPaper>
+</div>
 
-    <SurveyPrompt Title="How is Blazor working for you?" />
+@code{
+    DParticipant participant = new DParticipant();
+    DCreator creator = new DCreator();
+    
+    void Login() { }
+}

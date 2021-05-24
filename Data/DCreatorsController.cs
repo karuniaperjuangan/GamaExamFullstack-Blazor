@@ -76,10 +76,18 @@ namespace GamaExamFullstack.Data
         [HttpPost]
         public async Task<ActionResult<DCreator>> PostDCreator(DCreator dCreator)
         {
+            bool usernameAlreadyExists = _context.dCreators.Any(x => x.username == dCreator.username);
+            if(usernameAlreadyExists == false)
+            {
             _context.dCreators.Add(dCreator);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetDCreator", new { id = dCreator.Id }, dCreator);
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         // DELETE: api/DCreators/5

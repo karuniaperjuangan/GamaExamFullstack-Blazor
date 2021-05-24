@@ -76,10 +76,16 @@ namespace GamaExamFullstack.Data
         [HttpPost]
         public async Task<ActionResult<DParticipant>> PostDParticipant(DParticipant dParticipant)
         {
-            _context.dParticipants.Add(dParticipant);
-            await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetDParticipant", new { id = dParticipant.Id }, dParticipant);
+            bool usernameAlreadyExists = _context.dParticipants.Any(x => x.username == dParticipant.username);
+            if (usernameAlreadyExists == false)
+            {
+                _context.dParticipants.Add(dParticipant);
+                await _context.SaveChangesAsync();
+                return CreatedAtAction("GetDParticipant", new { id = dParticipant.Id }, dParticipant);
+            }
+            else return BadRequest();
+
         }
 
         // DELETE: api/DParticipants/5

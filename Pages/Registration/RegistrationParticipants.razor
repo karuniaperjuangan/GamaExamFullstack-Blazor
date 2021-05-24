@@ -8,15 +8,6 @@
 @inject IMatToaster Toaster
 
 
-<style>
-    .matcard-centered {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        padding: 20px;
-        width: 450px;
-    }
-</style>
 
 
 <div>
@@ -47,15 +38,16 @@
     {
         if (participants.username != null && participants.name != null && participants.password != null && participants.institute != null)
         {
-            await Http.PostJsonAsync("https://localhost:5001/api/DParticipants", participants);
-            NavigationManager.NavigateTo("listcreators");
+            var response = await Http.PostJsonAsync("https://localhost:5001/api/DParticipants", participants);
+            if (response.IsSuccessStatusCode == false) Toaster.Add("Username already exist", MatToastType.Danger);
+            else NavigationManager.NavigateTo("/");
         }
         else Toaster.Add("Please do not leave any field empty", MatToastType.Danger);
 
     }
     void Cancel()
     {
-        NavigationManager.NavigateTo("listcreators");
+        NavigationManager.NavigateTo("/");
     }
 
 }

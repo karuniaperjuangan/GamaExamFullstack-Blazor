@@ -1,4 +1,5 @@
 ﻿@using GamaExamFullstack.Data
+@using Microsoft.AspNetCore.Mvc
 
 @page "/register/creator"
 
@@ -8,15 +9,6 @@
 @inject IMatToaster Toaster
 
 
-<style>
-    .matcard-centered {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        padding: 20px;
-        width: 450px;
-    }
-</style>
 
 
 <div>
@@ -47,15 +39,16 @@
     {
         if (creator.username != null && creator.name != null && creator.password != null && creator.institute != null)
         {
-            await Http.PostJsonAsync("https://localhost:5001/api/DCreators", creator);
-            NavigationManager.NavigateTo("listcreators");
+            var response = await Http.PostJsonAsync("https://localhost:5001/api/DCreators", creator);
+            if (response.IsSuccessStatusCode == false) Toaster.Add("Username already exist", MatToastType.Danger);
+            else NavigationManager.NavigateTo("/");
         }
         else Toaster.Add("Please do not leave any field empty", MatToastType.Danger);
 
     }
     void Cancel()
     {
-        NavigationManager.NavigateTo("listcreators");
+        NavigationManager.NavigateTo("/");
     }
 
 }
