@@ -17,10 +17,7 @@ namespace GamaExamFullstack.Data
         public int Duration { get; set; } // menit
         [Column(TypeName = "int")]
         public int NumOfQuestion { get; set; }
-        [Column(TypeName = "datetime2(7)")]
-        public DateTime StartTime { get; set; }
-        [Column(TypeName = "datetime2(7)")]
-        public DateTime EndTime { get; set; }
+
 
         [ForeignKey("DCreator")]
         public int CreatorId { get; set; }

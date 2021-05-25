@@ -40,6 +40,21 @@ namespace GamaExamFullstack.Data
             return dParticipant;
         }
 
+        // GET: api/DCreators/username
+        [HttpGet]
+        [Route("getuser/{username}")]
+        public async Task<ActionResult<DParticipant>> GetDParticipant(string username)
+        {
+            var dParticipant = await _context.dParticipants.Where(x => x.username == username).FirstAsync();
+
+            if (dParticipant == null)
+            {
+                return NotFound();
+            }
+
+            return dParticipant;
+        }
+
         // PUT: api/DParticipants/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

@@ -1,0 +1,78 @@
+﻿@using GamaExamFullstack.Data
+
+@page "/edit/contest/{id}"
+
+@inject CustomHttpClient Http
+@inject NavigationManager NavigationManager
+@inject AppSettingsService AppSettingsService
+@inject IMatToaster Toaster
+
+<h3>Edit Contest</h3>
+
+<div>
+    <MatHeadline6 Class="text-center">Edit Contest</MatHeadline6>
+    <MatTextField @bind-Value="@contest.Title" Label="Contest Title"></MatTextField>
+    <p></p>
+    <MatTextField @bind-Value="@contest.Duration" Label="Duration" TValue="int"></MatTextField>
+
+    <div class="d-inline-block">
+        <MatButton Raised="true" OnClick="@UpdateContest" Style="float:left;">Edit</MatButton>
+        <MatButton Raised="true" OnClick="@Cancel" Style="float:right">Cancel</MatButton>
+    </div>
+
+    <MatTable Items="@questions" class="mat-elevation-z5">
+        <MatTableHeader>
+            <th>Id</th>
+            <th>Question Text</th>
+            <th>Correct Answer</th>
+            <th>Edit/Delete</th>
+        </MatTableHeader>
+        <MatTableRow>
+            <td>@context.Id</td>
+            <td>@context.QuestionText</td>
+            <td>@context.TrueAnswer</td>
+            <td>
+                <MatButton Link=@("/edit/questions/"+context.Id) Raised="true" Disabled="true">Edit</MatButton>
+                <MatButton OnClick="()=>Delete(context.Id)" Raised="true">Delete</MatButton>
+            </td>
+        </MatTableRow>
+    </MatTable>
+
+</div>
+
+@code {
+    [Parameter]
+    public string id { get; set; }
+
+    Contest contest = new Contest();
+    Question[] questions;
+
+    protected override async Task OnInitializedAsync()
+    {
+        contest = await Http.GetJsonAsync<Contest>("https://localhost:5001/api/Contests/" + id);
+        questions = await Http.GetJsonAsync<Question[]>("https://localhost:5001/api/Questions");
+    }
+
+    protected async Task UpdateContest()
+    {
+        if (contest.Title != null && contest.Duration != 0)
+        {
+            await Http.PutJsonAsync("https://localhost:5001/api/Contests/" + id, contest);
+            NavigationManager.NavigateTo("homepage/creator/" + Convert.ToString(GlobalLoginState.LoggedCreatorID));
+        }
+        else Toaster.Add("Please do not leave any field empty", MatToastType.Danger);
+
+    }
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("homepage/creator/" + Convert.ToString(GlobalLoginState.LoggedCreatorID));
+    }
+
+    protected async Task Delete(int Id)
+    {
+        await Http.DeleteAsync("https://localhost:5001/api/Questions" + Convert.ToString(Id));
+        NavigationManager.NavigateTo("edit/contest/{id}", forceLoad: true);
+    }
+
+
+    }

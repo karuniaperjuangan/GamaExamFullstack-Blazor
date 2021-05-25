@@ -11,25 +11,25 @@
     <MatPaper Style="background-color:white;box-shadow: 10px;" Class="matcard-centered">
         <MatTabGroup>
             <MatTab Label="Participant">
-                <MatH6 Class="text-center">Participant Registration</MatH6>
-                <MatTextField @bind-Value="@participant.username" Label="Username" Class="mt-1" FullWidth="true"></MatTextField>
+                <MatH6 Class="text-center" Style="margin-top:20px;margin-bottom:10px;">Participant Registration</MatH6>
+                <MatTextField @bind-Value="@participant.username" Label="Username" Class="mt-md-2" FullWidth="true"></MatTextField>
                 <p></p>
-                <MatTextField @bind-Value="@participant.password" Label="Password" Type="password" Class="mt-1" FullWidth="true"></MatTextField>
+                <MatTextField @bind-Value="@participant.password" Label="Password" Type="password" Class="mt-md-2" FullWidth="true"></MatTextField>
                 <p></p>
                 <div class="d-inline">
                     <MatButtonLink Href="/register/participants" Style="float:left;">Not Registered?</MatButtonLink>
-                    <MatButton Raised="true" OnClick="@Login" Style="float:right;">Login</MatButton>
+                    <MatButton Raised="true" OnClick="@LoginParticipant" Style="float:right;">Login</MatButton>
                 </div>
             </MatTab>
             <MatTab Label="Creator">
-                <MatH6 Class="text-center">Creator Registration</MatH6>
+                <MatH6 Class="text-center" Style="margin-top:20px;margin-bottom:10px;">Creator Registration</MatH6>
                 <MatTextField @bind-Value="@creator.username" Label="Username" Class="mt-md-2" FullWidth="true"></MatTextField>
                 <p></p>
-                <MatTextField @bind-Value="@creator.password" Label="Password" Type="password" Class="mt-1" FullWidth="true"></MatTextField>
+                <MatTextField @bind-Value="@creator.password" Label="Password" Type="password" Class="mt-md-2" FullWidth="true"></MatTextField>
                 <p></p>
                 <div class="d-inline">
                     <MatButtonLink Href="/register/creator" Style="float:left;">Not Registered?</MatButtonLink>
-                    <MatButton Raised="true" OnClick="@Login" Style="float:right;">Login</MatButton>
+                    <MatButton Raised="true" OnClick="@LoginCreator" Style="float:right;">Login</MatButton>
                 </div>
             </MatTab>
         </MatTabGroup>
@@ -39,6 +39,43 @@
 @code{
     DParticipant participant = new DParticipant();
     DCreator creator = new DCreator();
-    
-    void Login() { }
+
+    protected async Task LoginParticipant()
+    {
+
+        try
+        {
+            var response = await Http.GetJsonAsync<DParticipant>("https://localhost:5001/api/DParticipants/getuser/" + participant.username);
+            if (participant.password == response.password)
+            {
+                GlobalLoginState.LoggedParticipantID = response.Id;
+                NavigationManager.NavigateTo("/homepage/participants/" + Convert.ToString(GlobalLoginState.LoggedParticipantID));
+            }
+            else Toaster.Add("Wrong username or password", MatToastType.Danger);
+        }
+        catch (Exception)
+        {
+            Toaster.Add("Wrong username or password", MatToastType.Danger);
+        }
+
+    }
+
+    protected async Task LoginCreator()
+    {
+
+        try
+        {
+            var response = await Http.GetJsonAsync<DCreator>("https://localhost:5001/api/DCreators/getuser/" + creator.username);
+            if (creator.password == response.password)
+            {
+                GlobalLoginState.LoggedCreatorID = response.Id;
+                NavigationManager.NavigateTo("/homepage/creator/" + Convert.ToString(GlobalLoginState.LoggedCreatorID));
+            }
+            else Toaster.Add("Wrong username or password", MatToastType.Danger);
+        }
+        catch(Exception)
+        {
+            Toaster.Add("Wrong username or password", MatToastType.Danger);
+        }
+    }
 }

@@ -1,0 +1,53 @@
+﻿@using GamaExamFullstack.Data
+
+@page "/homepage/creator/{id}"
+
+@inject CustomHttpClient Http
+@inject NavigationManager NavigationManager
+@inject AppSettingsService AppSettingsService
+@inject IMatToaster Toaster
+
+<MatH4>Hello, welcome back @creator.name</MatH4>
+
+<MatDivider></MatDivider>
+
+<MatButton Link=@("/edit/creator/"+creator.Id)>Edit your Profile</MatButton>
+
+<MatTable Items="@contests" class="mat-elevation-z5">
+    <MatTableHeader>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Creator</th>
+        <th>Duration</th>
+        <th>Manage</th>
+    </MatTableHeader>
+    <MatTableRow>
+        <td>@context.Id</td>
+        <td>@context.Title</td>
+        <td>@context.Creator.name</td>
+        <td>@context.Duration</td>
+        <td>
+            <MatButton Link=@("/edit/creator/"+context.Id) Raised="true">Manage</MatButton>
+        </td>
+    </MatTableRow>
+</MatTable>
+
+<MatButton Link=@("/create/contest/"+id)>Create New Contest</MatButton>
+
+@code {
+    [Parameter]
+    public string id { get; set; }
+
+    DCreator creator = new DCreator();
+    Contest[] contests;
+    string baseUrl;
+
+    protected override async Task OnInitializedAsync()
+    {
+        creator = await Http.GetJsonAsync<DCreator>("https://localhost:5001/api/DCreators/" + id);
+        baseUrl = AppSettingsService.GetBaseUrl();
+        contests = await Http.GetJsonAsync<Contest[]>("https://localhost:5001/api/Contests");
+    }
+
+
+}

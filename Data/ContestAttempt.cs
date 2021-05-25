@@ -15,7 +15,7 @@ namespace GamaExamFullstack.Data
         public ICollection<QuestionAnswer> AnswerCollection { get; set; }
 
         [Column(TypeName = "int")]
-        public int TimeLeft { get; set; } // detik
+        public int RightAnswer { get; set; }
 
         [Column(TypeName = "float(24)")]
         public float score { get; set; }

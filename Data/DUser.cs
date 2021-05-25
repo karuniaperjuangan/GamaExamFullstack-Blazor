@@ -34,6 +34,5 @@ namespace GamaExamFullstack.Data
 
     public class DParticipant : DUser
     {
-        public ICollection<Contest> FollowedContest { get; set; }
     }
 }

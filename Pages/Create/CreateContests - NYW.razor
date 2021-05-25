@@ -1,0 +1,65 @@
+﻿@using GamaExamFullstack.Data
+@using Microsoft.AspNetCore.Mvc
+
+@page "/create/contest/{creatorID}"
+
+@inject CustomHttpClient Http
+@inject NavigationManager NavigationManager
+@inject AppSettingsService AppSettingsService
+@inject IMatToaster Toaster
+
+
+
+
+<div>
+    <MatCard Class="matcard-centered" Style="box-shadow: 10px">
+        <MatHeadline6 Class="text-center">Create New Contest</MatHeadline6>
+        <MatTextField @bind-Value="@contest.Title" Label="Contest Title"></MatTextField>
+        <p></p>
+        <MatTextField @bind-Value="@contest.Duration" Label="Duration" TValue="int"></MatTextField>
+        <p><br />@contest.CreatorId</p>
+
+
+        <div class="d-inline-block">
+            <MatButton Raised="true" OnClick="@AddContest" Style="float:left;" Disabled="true">Add Contest</MatButton>
+            <MatButton Raised="true" OnClick="@Cancel" Style="float:right;">Cancel</MatButton>
+        </div>
+
+    </MatCard>
+</div>
+
+@{ 
+    contest.CreatorId = Convert.ToInt32(creatorID);
+}
+
+@code {
+    [Parameter]
+    public string creatorID { get; set; }
+
+    Contest contest = new Contest();
+
+    DCreator creator = new DCreator();
+
+    protected override async Task OnInitializedAsync()
+    {
+        creator = await Http.GetJsonAsync<DCreator>("https://localhost:5001/api/DCreators/" + creatorID);
+    }
+
+
+    protected async Task AddContest()
+    {
+        if (contest.Title != null && contest.Duration != 0)
+        {
+            var response = await Http.PostJsonAsync("https://localhost:5001/api/Contests", contest);
+            if(response.IsSuccessStatusCode == false) Toaster.Add("Failed to add. Please try again", MatToastType.Danger);
+            NavigationManager.NavigateTo("/homepage/creator/"+creatorID);
+        }
+        else Toaster.Add("Please do not leave any field empty", MatToastType.Danger);
+
+    }
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("/homepage/creator/" + creatorID);
+    }
+
+}

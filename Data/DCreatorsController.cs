@@ -40,6 +40,21 @@ namespace GamaExamFullstack.Data
             return dCreator;
         }
 
+        // GET: api/DCreators/username
+        [HttpGet]
+        [Route("getuser/{username}")]
+        public async Task<ActionResult<DCreator>> GetDCreator(string username)
+        {
+            var dCreator = await _context.dCreators.Where(x => x.username == username).FirstAsync();
+
+            if (dCreator == null)
+            {
+                return NotFound();
+            }
+
+            return dCreator;
+        }
+
         // PUT: api/DCreators/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
