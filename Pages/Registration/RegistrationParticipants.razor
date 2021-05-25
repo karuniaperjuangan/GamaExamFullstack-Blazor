@@ -38,7 +38,7 @@
     {
         if (participants.username != null && participants.name != null && participants.password != null && participants.institute != null)
         {
-            var response = await Http.PostJsonAsync("https://localhost:5001/api/DParticipants", participants);
+            var response = await Http.PostJsonAsync(GlobalSetting.baseAddress + "api/DParticipants", participants);
             if (response.IsSuccessStatusCode == false) Toaster.Add("Username already exist", MatToastType.Danger);
             else NavigationManager.NavigateTo("/");
         }

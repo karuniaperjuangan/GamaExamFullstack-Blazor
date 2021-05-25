@@ -39,7 +39,7 @@
     {
         if (creator.username != null && creator.name != null && creator.password != null && creator.institute != null)
         {
-            var response = await Http.PostJsonAsync("https://localhost:5001/api/DCreators", creator);
+            var response = await Http.PostJsonAsync(GlobalSetting.baseAddress + "api/DCreators", creator);
             if (response.IsSuccessStatusCode == false) Toaster.Add("Username already exist", MatToastType.Danger);
             else NavigationManager.NavigateTo("/");
         }

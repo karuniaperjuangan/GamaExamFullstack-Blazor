@@ -35,14 +35,14 @@
 @code {
     DParticipant[] participants;
     string baseUrl;
+
     protected override async Task OnInitializedAsync()
     {
-        baseUrl = AppSettingsService.GetBaseUrl();
-        participants = await Http.GetJsonAsync<DParticipant[]>("https://localhost:5001/api/DParticipants");
+        participants = await Http.GetJsonAsync<DParticipant[]>(GlobalSetting.baseAddress + "api/DParticipants");
     }
     protected async Task Delete(int Id)
     {
-        await Http.DeleteAsync("https://localhost:5001/api/DParticipants/" + Convert.ToString(Id));
+        await Http.DeleteAsync(GlobalSetting.baseAddress + "api/DParticipants/" + Convert.ToString(Id));
         NavigationManager.NavigateTo("listparticipants", forceLoad: true);
     }
 }

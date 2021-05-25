@@ -42,7 +42,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        creator = await Http.GetJsonAsync<DCreator>("https://localhost:5001/api/DCreators/" + creatorID);
+        creator = await Http.GetJsonAsync<DCreator>(GlobalSetting.baseAddress + "api/DCreators/" + creatorID);
     }
 
 
@@ -50,7 +50,7 @@
     {
         if (contest.Title != null && contest.Duration != 0)
         {
-            var response = await Http.PostJsonAsync("https://localhost:5001/api/Contests", contest);
+            var response = await Http.PostJsonAsync(GlobalSetting.baseAddress + "api/Contests", contest);
             if(response.IsSuccessStatusCode == false) Toaster.Add("Failed to add. Please try again", MatToastType.Danger);
             NavigationManager.NavigateTo("/homepage/creator/"+creatorID);
         }

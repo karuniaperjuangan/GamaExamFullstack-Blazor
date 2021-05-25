@@ -44,9 +44,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        creator = await Http.GetJsonAsync<DCreator>("https://localhost:5001/api/DCreators/" + id);
+        creator = await Http.GetJsonAsync<DCreator>(GlobalSetting.baseAddress + "api/DCreators/" + id);
         baseUrl = AppSettingsService.GetBaseUrl();
-        contests = await Http.GetJsonAsync<Contest[]>("https://localhost:5001/api/Contests");
+        contests = await Http.GetJsonAsync<Contest[]>(GlobalSetting.baseAddress + "api/Contests");
     }
 
 

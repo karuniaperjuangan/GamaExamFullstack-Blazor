@@ -49,15 +49,15 @@
 
     protected override async Task OnInitializedAsync()
     {
-        contest = await Http.GetJsonAsync<Contest>("https://localhost:5001/api/Contests/" + id);
-        questions = await Http.GetJsonAsync<Question[]>("https://localhost:5001/api/Questions");
+        contest = await Http.GetJsonAsync<Contest>(GlobalSetting.baseAddress + "api/Contests/" + id);
+        questions = await Http.GetJsonAsync<Question[]>(GlobalSetting.baseAddress + "api/Questions");
     }
 
     protected async Task UpdateContest()
     {
         if (contest.Title != null && contest.Duration != 0)
         {
-            await Http.PutJsonAsync("https://localhost:5001/api/Contests/" + id, contest);
+            await Http.PutJsonAsync(GlobalSetting.baseAddress + "api/Contests/" + id, contest);
             NavigationManager.NavigateTo("homepage/creator/" + Convert.ToString(GlobalLoginState.LoggedCreatorID));
         }
         else Toaster.Add("Please do not leave any field empty", MatToastType.Danger);
@@ -70,7 +70,7 @@
 
     protected async Task Delete(int Id)
     {
-        await Http.DeleteAsync("https://localhost:5001/api/Questions" + Convert.ToString(Id));
+        await Http.DeleteAsync(GlobalSetting.baseAddress + "api/Questions" + Convert.ToString(Id));
         NavigationManager.NavigateTo("edit/contest/{id}", forceLoad: true);
     }
 

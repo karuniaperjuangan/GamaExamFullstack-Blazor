@@ -35,14 +35,14 @@
 
     protected override async Task OnInitializedAsync()
     {
-        creator = await Http.GetJsonAsync<DCreator>("https://localhost:5001/api/DCreators/" + id);
+        creator = await Http.GetJsonAsync<DCreator>(GlobalSetting.baseAddress + "api/DCreators/" + id);
     }
 
     protected async Task UpdateCreator()
     {
         if (creator.username != null && creator.name != null && creator.password != null && creator.institute != null)
         {
-            await Http.PutJsonAsync("https://localhost:5001/api/DCreators/" + id, creator);
+            await Http.PutJsonAsync(GlobalSetting.baseAddress + "api/DCreators/" + id, creator);
             NavigationManager.NavigateTo("listcreators");
         }
         else Toaster.Add("Please do not leave any field empty", MatToastType.Danger);
@@ -55,7 +55,7 @@
 
     protected async Task Delete()
     {
-        await Http.DeleteAsync("https://localhost:5001/api/DCreators/" + id);
+        await Http.DeleteAsync(GlobalSetting.baseAddress + "api/DCreators/" + id);
         NavigationManager.NavigateTo("listcreators", forceLoad: true);
     }
 

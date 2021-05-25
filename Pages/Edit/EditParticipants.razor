@@ -35,14 +35,14 @@
 
     protected override async Task OnInitializedAsync()
     {
-        participants = await Http.GetJsonAsync<DParticipant>("https://localhost:5001/api/DParticipants/" + id);
+        participants = await Http.GetJsonAsync<DParticipant>(GlobalSetting.baseAddress + "api/DParticipants/" + id);
     }
 
     protected async Task UpdateParticipant()
     {
         if (participants.username != null && participants.name != null && participants.password != null && participants.institute != null)
         {
-            await Http.PutJsonAsync("https://localhost:5001/api/DParticipants/" + id, participants);
+            await Http.PutJsonAsync(GlobalSetting.baseAddress + "api/DParticipants/" + id, participants);
             NavigationManager.NavigateTo("listparticipants");
         }
         else Toaster.Add("Please do not leave any field empty", MatToastType.Danger);
@@ -55,7 +55,7 @@
 
     protected async Task Delete()
     {
-        await Http.DeleteAsync("https://localhost:5001/api/DParticipants/" + id);
+        await Http.DeleteAsync(GlobalSetting.baseAddress + "api/DParticipants/" + id);
         NavigationManager.NavigateTo("listparticipants", forceLoad: true);
     }
 

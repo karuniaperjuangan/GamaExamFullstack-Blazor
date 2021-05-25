@@ -45,7 +45,7 @@
 
         try
         {
-            var response = await Http.GetJsonAsync<DParticipant>("https://localhost:5001/api/DParticipants/getuser/" + participant.username);
+            var response = await Http.GetJsonAsync<DParticipant>(GlobalSetting.baseAddress + "api/DParticipants/getuser/" + participant.username);
             if (participant.password == response.password)
             {
                 GlobalLoginState.LoggedParticipantID = response.Id;
@@ -65,7 +65,7 @@
 
         try
         {
-            var response = await Http.GetJsonAsync<DCreator>("https://localhost:5001/api/DCreators/getuser/" + creator.username);
+            var response = await Http.GetJsonAsync<DCreator>(GlobalSetting.baseAddress+"api/DCreators/getuser/" + creator.username);
             if (creator.password == response.password)
             {
                 GlobalLoginState.LoggedCreatorID = response.Id;

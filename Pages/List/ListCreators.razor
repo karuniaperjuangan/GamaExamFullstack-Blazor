@@ -38,12 +38,12 @@
     protected override async Task OnInitializedAsync()
     {
         baseUrl = AppSettingsService.GetBaseUrl();
-        creators = await Http.GetJsonAsync<DCreator[]>("https://localhost:5001/api/DCreators");
+        creators = await Http.GetJsonAsync<DCreator[]>(GlobalSetting.baseAddress + "api/DCreators");
     }
 
     protected async Task Delete(int Id)
     {
-        await Http.DeleteAsync("https://localhost:5001/api/DCreators/" + Convert.ToString(Id));
+        await Http.DeleteAsync(GlobalSetting.baseAddress + "api/DCreators/" + Convert.ToString(Id));
         NavigationManager.NavigateTo("listcreators", forceLoad: true);
     }
 }
