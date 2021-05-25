@@ -94,7 +94,6 @@ namespace GamaExamFullstack.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    QuestionNumber = table.Column<int>(type: "int", nullable: false),
                     QuestionText = table.Column<string>(type: "nvarchar(400)", nullable: true),
                     Answers_A = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     Answers_B = table.Column<string>(type: "nvarchar(200)", nullable: true),
@@ -121,8 +120,8 @@ namespace GamaExamFullstack.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    QuestionNumber = table.Column<int>(type: "int", nullable: false),
                     Answer = table.Column<string>(type: "char(1)", nullable: false),
+                    QuestionId = table.Column<int>(type: "int", nullable: true),
                     ContestAttemptId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -134,6 +133,12 @@ namespace GamaExamFullstack.Migrations
                         principalTable: "dContestsAttempt",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_QuestionAnswer_dQuestions_QuestionId",
+                        column: x => x.QuestionId,
+                        principalTable: "dQuestions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -160,13 +165,15 @@ namespace GamaExamFullstack.Migrations
                 name: "IX_QuestionAnswer_ContestAttemptId",
                 table: "QuestionAnswer",
                 column: "ContestAttemptId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_QuestionAnswer_QuestionId",
+                table: "QuestionAnswer",
+                column: "QuestionId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "dQuestions");
-
             migrationBuilder.DropTable(
                 name: "QuestionAnswer");
 
@@ -174,10 +181,13 @@ namespace GamaExamFullstack.Migrations
                 name: "dContestsAttempt");
 
             migrationBuilder.DropTable(
-                name: "dContests");
+                name: "dQuestions");
 
             migrationBuilder.DropTable(
                 name: "dParticipants");
+
+            migrationBuilder.DropTable(
+                name: "dContests");
 
             migrationBuilder.DropTable(
                 name: "dCreators");

@@ -10,15 +10,18 @@
 <h3>Edit Contest</h3>
 
 <div>
+
     <MatHeadline6 Class="text-center">Edit Contest</MatHeadline6>
     <MatTextField @bind-Value="@contest.Title" Label="Contest Title"></MatTextField>
     <p></p>
-    <MatTextField @bind-Value="@contest.Duration" Label="Duration" TValue="int"></MatTextField>
+    <MatTextField @bind-Value="@contest.Duration" Label="Duration in Minutes" TValue="int"></MatTextField>
 
     <div class="d-inline-block">
         <MatButton Raised="true" OnClick="@UpdateContest" Style="float:left;">Edit</MatButton>
         <MatButton Raised="true" OnClick="@Cancel" Style="float:right">Cancel</MatButton>
     </div>
+
+    
 
     <MatTable Items="@questions" class="mat-elevation-z5">
         <MatTableHeader>
@@ -32,12 +35,12 @@
             <td>@context.QuestionText</td>
             <td>@context.TrueAnswer</td>
             <td>
-                <MatButton Link=@("/edit/questions/"+context.Id) Raised="true" Disabled="true">Edit</MatButton>
+                <MatButton Link=@("/edit/question/"+context.Id) Raised="true">Edit</MatButton>
                 <MatButton OnClick="()=>Delete(context.Id)" Raised="true">Delete</MatButton>
             </td>
         </MatTableRow>
     </MatTable>
-
+    <MatButton Link=@("/create/question/"+contest.Id)>New Question</MatButton>
 </div>
 
 @code {
@@ -46,11 +49,13 @@
 
     Contest contest = new Contest();
     Question[] questions;
+    Question[] allquestions;
 
     protected override async Task OnInitializedAsync()
     {
         contest = await Http.GetJsonAsync<Contest>(GlobalSetting.baseAddress + "api/Contests/" + id);
-        questions = await Http.GetJsonAsync<Question[]>(GlobalSetting.baseAddress + "api/Questions");
+        allquestions = (await Http.GetJsonAsync<Question[]>(GlobalSetting.baseAddress + "api/Questions"));
+        questions = allquestions.Where(x => x.ContestId == Convert.ToInt32(id)).ToArray();
     }
 
     protected async Task UpdateContest()
@@ -70,7 +75,9 @@
 
     protected async Task Delete(int Id)
     {
-        await Http.DeleteAsync(GlobalSetting.baseAddress + "api/Questions" + Convert.ToString(Id));
+        contest.NumOfQuestion -= 1;
+        await Http.DeleteAsync(GlobalSetting.baseAddress + "api/Questions/" + Convert.ToString(Id));
+        await Http.PutJsonAsync(GlobalSetting.baseAddress + "api/Contests/" + id, contest);
         NavigationManager.NavigateTo("edit/contest/{id}", forceLoad: true);
     }
 

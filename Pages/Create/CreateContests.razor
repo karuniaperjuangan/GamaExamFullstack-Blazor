@@ -16,12 +16,11 @@
         <MatHeadline6 Class="text-center">Create New Contest</MatHeadline6>
         <MatTextField @bind-Value="@contest.Title" Label="Contest Title"></MatTextField>
         <p></p>
-        <MatTextField @bind-Value="@contest.Duration" Label="Duration" TValue="int"></MatTextField>
-        <p><br />@contest.CreatorId</p>
+        <MatTextField @bind-Value="@contest.Duration" Label="Duration in Minutes" TValue="int"></MatTextField>
 
 
         <div class="d-inline-block">
-            <MatButton Raised="true" OnClick="@AddContest" Style="float:left;" Disabled="true">Add Contest</MatButton>
+            <MatButton Raised="true" OnClick="@AddContest" Style="float:left;">Add Contest</MatButton>
             <MatButton Raised="true" OnClick="@Cancel" Style="float:right;">Cancel</MatButton>
         </div>
 
@@ -42,7 +41,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        creator = await Http.GetJsonAsync<DCreator>(GlobalSetting.baseAddress + "api/DCreators/" + creatorID);
+        creator = await Http.GetJsonAsync<DCreator>(GlobalSetting.baseAddress + "api/DCreators/" + GlobalLoginState.LoggedCreatorID);
     }
 
 
@@ -50,6 +49,7 @@
     {
         if (contest.Title != null && contest.Duration != 0)
         {
+            contest.NumOfQuestion = 0;
             var response = await Http.PostJsonAsync(GlobalSetting.baseAddress + "api/Contests", contest);
             if(response.IsSuccessStatusCode == false) Toaster.Add("Failed to add. Please try again", MatToastType.Danger);
             NavigationManager.NavigateTo("/homepage/creator/"+creatorID);

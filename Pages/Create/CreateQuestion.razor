@@ -1,0 +1,84 @@
+﻿@using GamaExamFullstack.Data
+@using Microsoft.AspNetCore.Mvc
+
+@page "/create/question/{contestID}"
+
+
+@inject CustomHttpClient Http
+@inject NavigationManager NavigationManager
+@inject AppSettingsService AppSettingsService
+@inject IMatToaster Toaster
+
+
+
+
+<div>
+    <MatHeadline6 Class="text-center">Create New Question</MatHeadline6>
+    <MatTextField @bind-Value="@question.QuestionText" Label="Contest Title" FullWidth="true"> </MatTextField>
+    <p><br />Correct Answer:</p>
+    <MatSelectItem @bind-Value="@question.TrueAnswer" Items="@Choice" Label="Correct Answer" TValue="char"> </MatSelectItem>
+    <p>
+        <MatTextField @bind-Value="@question.Answers_A" Label="Choice A" FullWidth="true"></MatTextField>
+    </p>
+    <p>
+        <MatTextField @bind-Value="@question.Answers_B" Label="Choice B" FullWidth="true"></MatTextField>
+    </p>
+    <p>
+        <MatTextField @bind-Value="@question.Answers_C" Label="Choice C" FullWidth="true"></MatTextField>
+    </p>
+    <p>
+        <MatTextField @bind-Value="@question.Answers_D" Label="Choice D" FullWidth="true"></MatTextField>
+    </p>
+    <p>
+        <MatTextField @bind-Value="@question.Answers_E" Label="Choice E" FullWidth="true"></MatTextField>
+    </p>
+
+
+    <div class="d-inline">
+        <MatButton Raised="true" OnClick="@AddQuestion" Style="float:left;">Add Question</MatButton>
+        <MatButton Raised="true" OnClick="@Cancel" Style="float:right;">Cancel</MatButton>
+    </div>
+
+</div>
+
+@{
+    question.ContestId = Convert.ToInt32(contestID);
+}
+
+@code {
+    [Parameter]
+    public string contestID { get; set; }
+    char[] Choice = { 'A', 'B', 'C', 'D', 'E' };
+    Question question = new Question();
+
+    Contest contest = new Contest();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        contest = await Http.GetJsonAsync<Contest>(GlobalSetting.baseAddress + "api/Contests/" + contestID);
+        contest.NumOfQuestion += 1;
+
+    }
+
+
+    protected async Task AddQuestion()
+    {
+        try
+        {
+
+            await Http.PutJsonAsync(GlobalSetting.baseAddress + "api/Contests/" + contestID, contest);
+            await Http.PostJsonAsync(GlobalSetting.baseAddress + "api/Questions", question);
+            
+            NavigationManager.NavigateTo("/edit/contest/" + contestID);
+        }
+
+        catch (Exception) { Toaster.Add("Failed to Add", MatToastType.Danger); }
+
+    }
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("/edit/contest/" + contestID);
+    }
+
+}

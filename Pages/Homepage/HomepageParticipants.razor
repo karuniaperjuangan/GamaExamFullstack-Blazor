@@ -10,23 +10,23 @@
 <MatH4>Hello, welcome back @participant.name</MatH4>
 
 <MatDivider></MatDivider>
-
+<p><br /><br /></p>
 <MatButton Link=@("/edit/participants/"+participant.Id)>Edit your Profile</MatButton>
-
+<p><br /><br /></p>
 <MatH6>Available Contest</MatH6>
 <MatTable Items="@contests" class="mat-elevation-z5">
     <MatTableHeader>
         <th>Id</th>
         <th>Title</th>
-        <th>Creator</th>
         <th>Duration</th>
+        <th>Number of Questions</th>
         <th>Attempt</th>
     </MatTableHeader>
     <MatTableRow>
         <td>@context.Id</td>
         <td>@context.Title</td>
-        <td>@context.Creator.name</td>
         <td>@context.Duration</td>
+        <td>@context.NumOfQuestion</td>
         <td>
             <MatButton Link=@("/edit/participant/"+context.Id) Raised="true" Disabled="true">Take</MatButton>
         </td>

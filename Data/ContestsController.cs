@@ -76,13 +76,9 @@ namespace GamaExamFullstack.Data
         [HttpPost]
         public async Task<ActionResult<Contest>> PostContest(Contest contest)
         {
-            _context.dContests.Add(contest);
-            var creatorslist = from creators in _context.dCreators
-                               where creators.Id == contest.CreatorId
-                               select creators;
-            contest.Creator = creatorslist.FirstOrDefault();
+            _context.dContests.Add(contest);       
             await _context.SaveChangesAsync();
-
+            contest = await _context.dContests.Include(x => x.Creator).FirstOrDefaultAsync(x=>x.CreatorId==contest.CreatorId);
             return CreatedAtAction("GetContest", new { id = contest.Id }, contest);
         }
 

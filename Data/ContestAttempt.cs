@@ -26,6 +26,6 @@ namespace GamaExamFullstack.Data
 
         [ForeignKey("DParticipant")]
         public int ParticipantId { get; set; }
-        public DParticipant Participant { get; set; }
+        public virtual DParticipant Participant { get; set; }
     }
 }

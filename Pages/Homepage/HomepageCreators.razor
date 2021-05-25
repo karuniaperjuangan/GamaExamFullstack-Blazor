@@ -10,24 +10,26 @@
 <MatH4>Hello, welcome back @creator.name</MatH4>
 
 <MatDivider></MatDivider>
-
+<p><br /><br /></p>
 <MatButton Link=@("/edit/creator/"+creator.Id)>Edit your Profile</MatButton>
 
+<p><br /><br /></p>
+<MatH6>Your Contest</MatH6>
 <MatTable Items="@contests" class="mat-elevation-z5">
     <MatTableHeader>
         <th>Id</th>
         <th>Title</th>
-        <th>Creator</th>
         <th>Duration</th>
+        <th>Number of Questions</th>
         <th>Manage</th>
     </MatTableHeader>
     <MatTableRow>
         <td>@context.Id</td>
         <td>@context.Title</td>
-        <td>@context.Creator.name</td>
         <td>@context.Duration</td>
+        <td>@context.NumOfQuestion</td>
         <td>
-            <MatButton Link=@("/edit/creator/"+context.Id) Raised="true">Manage</MatButton>
+            <MatButton Link=@("/edit/contest/"+context.Id) Raised="true" Disabled=@(context.CreatorId!=Convert.ToInt32(id))>Manage</MatButton>
         </td>
     </MatTableRow>
 </MatTable>
@@ -40,13 +42,15 @@
 
     DCreator creator = new DCreator();
     Contest[] contests;
+    Contest[] allcontests;
     string baseUrl;
 
     protected override async Task OnInitializedAsync()
     {
         creator = await Http.GetJsonAsync<DCreator>(GlobalSetting.baseAddress + "api/DCreators/" + id);
         baseUrl = AppSettingsService.GetBaseUrl();
-        contests = await Http.GetJsonAsync<Contest[]>(GlobalSetting.baseAddress + "api/Contests");
+        allcontests = await Http.GetJsonAsync<Contest[]>(GlobalSetting.baseAddress + "api/Contests");
+        contests = allcontests.Where(x => x.CreatorId == Convert.ToInt32(id)).ToArray();
     }
 
 

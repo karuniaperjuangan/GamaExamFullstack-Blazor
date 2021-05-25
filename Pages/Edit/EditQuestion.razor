@@ -1,0 +1,78 @@
+﻿@using GamaExamFullstack.Data
+@using Microsoft.AspNetCore.Mvc
+
+@page "/edit/question/{questionid}"
+
+
+@inject CustomHttpClient Http
+@inject NavigationManager NavigationManager
+@inject AppSettingsService AppSettingsService
+@inject IMatToaster Toaster
+
+
+
+<div>
+    <MatHeadline6 Class="text-center">Edit Question</MatHeadline6>
+    <MatTextField @bind-Value="@question.QuestionText" Label="Contest Title" FullWidth="true"> </MatTextField>
+    <p><br />Correct Answer:</p>
+    <MatSelectItem @bind-Value="@question.TrueAnswer" Items="@Choice" Label="Correct Answer" TValue="char"> </MatSelectItem>
+    <p>
+        <MatTextField @bind-Value="@question.Answers_A" Label="Choice A" FullWidth="true"></MatTextField>
+    </p>
+    <p>
+        <MatTextField @bind-Value="@question.Answers_B" Label="Choice B" FullWidth="true"></MatTextField>
+    </p>
+    <p>
+        <MatTextField @bind-Value="@question.Answers_C" Label="Choice C" FullWidth="true"></MatTextField>
+    </p>
+    <p>
+        <MatTextField @bind-Value="@question.Answers_D" Label="Choice D" FullWidth="true"></MatTextField>
+    </p>
+    <p>
+        <MatTextField @bind-Value="@question.Answers_E" Label="Choice E" FullWidth="true"></MatTextField>
+    </p>
+
+
+    <div class="d-inline">
+        <MatButton Raised="true" OnClick="@EditQuestion" Style="float:left;">Save Changes</MatButton>
+        <MatButton Raised="true" OnClick="@Cancel" Style="float:right;">Cancel</MatButton>
+    </div>
+
+</div>
+
+
+@code {
+    [Parameter]
+    public string questionID { get; set; }
+    char[] Choice = { 'A', 'B', 'C', 'D', 'E' };
+    Question question = new Question();
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        question = await Http.GetJsonAsync<Question>(GlobalSetting.baseAddress + "api/Questions/" + questionID);
+
+
+    }
+
+
+    protected async Task EditQuestion()
+    {
+        try
+        {
+
+            await Http.PutJsonAsync(GlobalSetting.baseAddress + "api/Questions/"+ questionID, question);
+
+            NavigationManager.NavigateTo("/edit/contest/" + question.ContestId);
+        }
+
+        catch (Exception) { Toaster.Add("Failed to Edit", MatToastType.Danger); }
+
+    }
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("/edit/contest/" + question.ContestId);
+    }
+
+}

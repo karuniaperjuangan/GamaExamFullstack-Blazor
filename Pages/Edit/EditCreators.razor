@@ -43,7 +43,7 @@
         if (creator.username != null && creator.name != null && creator.password != null && creator.institute != null)
         {
             await Http.PutJsonAsync(GlobalSetting.baseAddress + "api/DCreators/" + id, creator);
-            NavigationManager.NavigateTo("listcreators");
+            NavigationManager.NavigateTo("/homepage/creator/"+id);
         }
         else Toaster.Add("Please do not leave any field empty", MatToastType.Danger);
 
@@ -56,7 +56,7 @@
     protected async Task Delete()
     {
         await Http.DeleteAsync(GlobalSetting.baseAddress + "api/DCreators/" + id);
-        NavigationManager.NavigateTo("listcreators", forceLoad: true);
+        NavigationManager.NavigateTo("/homepage/creator/" + id, forceLoad: true);
     }
 
     }

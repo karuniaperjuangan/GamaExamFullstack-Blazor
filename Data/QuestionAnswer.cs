@@ -12,15 +12,19 @@ namespace GamaExamFullstack.Data
         [Key]
         public int Id { get; set; }
 
-        [Column(TypeName = "int")]
-        public int QuestionNumber { get; set; }
+
 
         [Column(TypeName = "char(1)")]
         public char Answer { get; set; }
 
+        
+        [ForeignKey("Question")]
+        public int? QuestionId { get; set; }
+        public virtual Question Question { get; set; }
+
 
         [ForeignKey("ContestAttempt")]
         public int ContestAttemptId { get; set; }
-        public ContestAttempt ContestAttempt { get; set; }
+        public virtual ContestAttempt ContestAttempt { get; set; }
     }
 }

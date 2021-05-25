@@ -11,24 +11,24 @@
     <MatPaper Style="background-color:white;box-shadow: 10px;" Class="matcard-centered">
         <MatTabGroup>
             <MatTab Label="Participant">
-                <MatH6 Class="text-center" Style="margin-top:20px;margin-bottom:10px;">Participant Registration</MatH6>
+                <MatH6 Class="text-center" Style="margin-top:20px;margin-bottom:10px;">Participant Sign-in</MatH6>
                 <MatTextField @bind-Value="@participant.username" Label="Username" Class="mt-md-2" FullWidth="true"></MatTextField>
                 <p></p>
                 <MatTextField @bind-Value="@participant.password" Label="Password" Type="password" Class="mt-md-2" FullWidth="true"></MatTextField>
                 <p></p>
                 <div class="d-inline">
-                    <MatButtonLink Href="/register/participants" Style="float:left;">Not Registered?</MatButtonLink>
+                    <MatButtonLink Href="/register/participants" Style="float:left;">Don't have account?</MatButtonLink>
                     <MatButton Raised="true" OnClick="@LoginParticipant" Style="float:right;">Login</MatButton>
                 </div>
             </MatTab>
             <MatTab Label="Creator">
-                <MatH6 Class="text-center" Style="margin-top:20px;margin-bottom:10px;">Creator Registration</MatH6>
+                <MatH6 Class="text-center" Style="margin-top:20px;margin-bottom:10px;">Creator Sign-in</MatH6>
                 <MatTextField @bind-Value="@creator.username" Label="Username" Class="mt-md-2" FullWidth="true"></MatTextField>
                 <p></p>
                 <MatTextField @bind-Value="@creator.password" Label="Password" Type="password" Class="mt-md-2" FullWidth="true"></MatTextField>
                 <p></p>
                 <div class="d-inline">
-                    <MatButtonLink Href="/register/creator" Style="float:left;">Not Registered?</MatButtonLink>
+                    <MatButtonLink Href="/register/creator" Style="float:left;">Don't have account?</MatButtonLink>
                     <MatButton Raised="true" OnClick="@LoginCreator" Style="float:right;">Login</MatButton>
                 </div>
             </MatTab>

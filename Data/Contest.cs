@@ -15,13 +15,14 @@ namespace GamaExamFullstack.Data
         public string Title { get; set; }
         [Column(TypeName = "int")]
         public int Duration { get; set; } // menit
+
         [Column(TypeName = "int")]
         public int NumOfQuestion { get; set; }
 
 
         [ForeignKey("DCreator")]
         public int CreatorId { get; set; }
-        public DCreator Creator { get; set; }
+        public virtual DCreator Creator { get; set; }
 
         // public List<Question> Questions { get; set; } // -> ini berarti gajadi ada kan ya
         public ICollection<Question> Questions { get; set; }

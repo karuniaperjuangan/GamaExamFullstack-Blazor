@@ -43,7 +43,7 @@
         if (participants.username != null && participants.name != null && participants.password != null && participants.institute != null)
         {
             await Http.PutJsonAsync(GlobalSetting.baseAddress + "api/DParticipants/" + id, participants);
-            NavigationManager.NavigateTo("listparticipants");
+            NavigationManager.NavigateTo("/homepage/participants/" + id);
         }
         else Toaster.Add("Please do not leave any field empty", MatToastType.Danger);
 
@@ -56,7 +56,7 @@
     protected async Task Delete()
     {
         await Http.DeleteAsync(GlobalSetting.baseAddress + "api/DParticipants/" + id);
-        NavigationManager.NavigateTo("listparticipants", forceLoad: true);
+        NavigationManager.NavigateTo("/homepage/participants/"+id, forceLoad: true);
     }
 
     }

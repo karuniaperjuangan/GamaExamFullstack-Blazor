@@ -10,7 +10,6 @@ namespace GamaExamFullstack.Data
     {
         public DBExamContext(DbContextOptions<DBExamContext> options):base(options)
         {
-
         }
 
         public DbSet<DCreator> dCreators { get; set; }
@@ -20,7 +19,7 @@ namespace GamaExamFullstack.Data
         public DbSet<ContestAttempt> dContestsAttempt { get; set; }
         public DbSet<QuestionAnswer> QuestionAnswer { get; set; }
 
-
+        
 
         
 

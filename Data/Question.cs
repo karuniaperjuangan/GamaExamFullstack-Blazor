@@ -11,8 +11,7 @@ namespace GamaExamFullstack.Data
     {
         [Key]
         public int Id { get; set; }
-        [Column(TypeName = "int")]
-        public int QuestionNumber { get; set; }
+
         [Column(TypeName = "nvarchar(400)")]
         public string QuestionText { get; set; }
 
@@ -32,7 +31,7 @@ namespace GamaExamFullstack.Data
         public string Answers_E { get; set; }
 
         [Column(TypeName = "char(1)")]
-        public int TrueAnswer { get; set; }
+        public char TrueAnswer { get; set; }
         
         [ForeignKey("Contest")]
         public int ContestId { get; set; }
