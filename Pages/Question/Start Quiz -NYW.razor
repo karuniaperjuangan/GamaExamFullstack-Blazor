@@ -1,6 +1,7 @@
 ﻿@using GamaExamFullstack.Data
+@using System.Timers
 
-@page "/dummyquiz"
+@page "/startquiz"
 
 @inject CustomHttpClient Http
 @inject NavigationManager NavigationManager
@@ -13,7 +14,7 @@
 <div>
     <div class="row">
         <div class="col-lg-8 mb-4">
-            <MatCard >
+            <MatCard>
                 <MatH2>@NamaKontes</MatH2>
                 <MatH2>Soal No 12</MatH2>
                 <MatH6>@question.QuestionText</MatH6>
@@ -27,6 +28,11 @@
             </MatCard>
         </div>
         <div class="col-lg-4">
+            <MatPaper Elevation="4" Style="width:300px" Rounded="true">
+                <MatH4 Style="text-align:center;">Time Left</MatH4>
+                <MatHeadline6 Style="text-align:center;">@(display_min.ToString("D2")+":"+display_s.ToString("D2"))</MatHeadline6>
+            </MatPaper>
+            <p><br /></p>
             <div class="mat-elevation-z4 " style="width:300px;">
                 @{IEnumerable<int> NumberCount = Enumerable.Range(0, NumofQuestion); }
                 @foreach (int number in NumberCount)
@@ -34,9 +40,7 @@
                     <MatButton Raised="true" Class="pilih">@(number+1)&nbsp;</MatButton>
                 }
             </div>
-            <div class="col-lg-4 mat-elevation-z4">
-                <p>5000</p>
-            </div>
+
         </div>
 
     </div>
@@ -58,7 +62,37 @@
     int NumofQuestion = 100;
     string NamaKontes = "Matematika";
     Question question = new Question();
+    int duration = 1;
+    int timeleft_s;
+    int display_min;
+    int display_s;
 
     char chosenAnswer;
+
+    protected override void OnInitialized()
+    {
+
+        timeleft_s = 60 * duration;
+        countTime();
+    }
+
+    public async void countTime()
+    {
+        while(timeleft_s > 0)
+        {
+            timeleft_s--;
+            display_min = timeleft_s / 60;
+            display_s = timeleft_s % 60;
+            StateHasChanged();
+            await Task.Delay(1000);
+        }
+        NavigationManager.NavigateTo("/");
+    }
+
+    private void TimerOnElapsed(object sender, ElapsedEventArgs e) { }
+
+}
+
+@{ 
 
 }
