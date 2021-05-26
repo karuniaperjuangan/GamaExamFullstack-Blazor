@@ -42,15 +42,13 @@
 
     DCreator creator = new DCreator();
     Contest[] contests;
-    Contest[] allcontests;
     string baseUrl;
 
     protected override async Task OnInitializedAsync()
     {
         creator = await Http.GetJsonAsync<DCreator>(GlobalSetting.baseAddress + "api/DCreators/" + id);
         baseUrl = AppSettingsService.GetBaseUrl();
-        allcontests = await Http.GetJsonAsync<Contest[]>(GlobalSetting.baseAddress + "api/Contests");
-        contests = allcontests.Where(x => x.CreatorId == Convert.ToInt32(id)).ToArray();
+        contests = (await Http.GetJsonAsync<Contest[]>(GlobalSetting.baseAddress + "api/Contests")).Where(x => x.CreatorId == Convert.ToInt32(id)).ToArray();
     }
 
 

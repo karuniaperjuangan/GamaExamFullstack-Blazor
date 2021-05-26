@@ -74,12 +74,13 @@ namespace GamaExamFullstack.Data
         // POST: api/ContestAttempts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ContestAttempt>> PostContestAttempt(ContestAttempt contestAttempt)
+        public async Task<int> PostContestAttempt(ContestAttempt contestAttempt)
         {
             _context.dContestsAttempt.Add(contestAttempt);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetContestAttempt", new { id = contestAttempt.Id }, contestAttempt);
+            CreatedAtAction("GetContestAttempt", new { id = contestAttempt.Id }, contestAttempt);
+            return contestAttempt.Id;
         }
 
         // DELETE: api/ContestAttempts/5

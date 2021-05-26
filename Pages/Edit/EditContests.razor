@@ -54,8 +54,7 @@
     protected override async Task OnInitializedAsync()
     {
         contest = await Http.GetJsonAsync<Contest>(GlobalSetting.baseAddress + "api/Contests/" + id);
-        allquestions = (await Http.GetJsonAsync<Question[]>(GlobalSetting.baseAddress + "api/Questions"));
-        questions = allquestions.Where(x => x.ContestId == Convert.ToInt32(id)).ToArray();
+        questions = (await Http.GetJsonAsync<Question[]>(GlobalSetting.baseAddress + "api/Questions")).Where(x => x.ContestId == Convert.ToInt32(id)).ToArray();
     }
 
     protected async Task UpdateContest()

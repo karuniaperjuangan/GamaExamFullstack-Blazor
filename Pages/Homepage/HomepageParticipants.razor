@@ -28,7 +28,7 @@
         <td>@context.Duration</td>
         <td>@context.NumOfQuestion</td>
         <td>
-            <MatButton Link=@("/edit/participant/"+context.Id) Raised="true" Disabled="true">Take</MatButton>
+            <MatButton Link=@("/startquiz/"+id+"/"+context.Id) Raised="true">Take</MatButton>
         </td>
     </MatTableRow>
 </MatTable>

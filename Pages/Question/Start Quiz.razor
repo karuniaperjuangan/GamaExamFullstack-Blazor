@@ -1,0 +1,131 @@
+﻿@using GamaExamFullstack.Data
+@using System.Timers
+
+@page "/startquiz/{participantid}/{contestID}"
+
+@inject CustomHttpClient Http
+@inject NavigationManager NavigationManager
+@inject AppSettingsService AppSettingsService
+@inject IMatToaster Toaster
+
+
+
+
+<div>
+    <div class="row">
+        <div class="col-lg-8 mb-4">
+            <MatPaper Elevation="4" Rounded="true" Style="padding:10px">
+                <MatH5>@contest.Title</MatH5>
+                <MatH4>@("Soal No"+(currentQuestion_index+1).ToString())</MatH4>
+                <MatSubtitle1>@activeQuestion.QuestionText</MatSubtitle1>
+                <MatRadioGroup @bind-Value="@chosenAnswer" TValue="char">
+                    <MatRadioButton Value="@('A')" TValue="char">@activeQuestion.Answers_A</MatRadioButton>
+                    <p><br /></p>
+                    <MatRadioButton Value="@('B')" TValue="char">@activeQuestion.Answers_B</MatRadioButton>
+                    <p><br /></p>
+                    <MatRadioButton Value="@('C')" TValue="char">@activeQuestion.Answers_C</MatRadioButton>
+                    <p><br /></p>
+                    <MatRadioButton Value="@('D')" TValue="char">@activeQuestion.Answers_D</MatRadioButton>
+                    <p><br /></p>
+                    <MatRadioButton Value="@('E')" TValue="char">@activeQuestion.Answers_E</MatRadioButton>
+                    <p><br /></p>
+                </MatRadioGroup>
+                <MatButton Raised="true" OnClick="Submit" Label="Submit Answer"></MatButton>
+            </MatPaper>
+        </div>
+        <div class="col-lg-4">
+            <MatPaper Elevation="4" Style="width:300px" Rounded="true">
+                <MatBody1 Style="text-align:center;">Time Left</MatBody1>
+                <MatBody2 Style="text-align:center;">@(display_min.ToString("D2")+":"+display_s.ToString("D2"))</MatBody2>
+            </MatPaper>
+            <p><br /></p>
+            <div class="mat-elevation-z4 " style="width:300px;">
+                @{IEnumerable<int> NumberCount = Enumerable.Range(0, contest.NumOfQuestion); }
+                @foreach (int number in NumberCount)
+                {
+                    <MatButton OnClick="()=>selectQuestion(number)" Raised="true" Class="pilih">@(number+1)&nbsp;</MatButton>
+                }
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public string participantid { get; set; }
+    [Parameter]
+    public string contestID { get; set; }
+
+    Contest contest = new Contest();
+    Question activeQuestion = new Question();
+
+    ContestAttempt contestAttempt = new ContestAttempt();
+    Question[] questions;
+    QuestionAnswer[] questionAnswers;
+    int timeleft_s, display_min, display_s, i, currentQuestion_index = 0;
+    char chosenAnswer;
+
+    protected override async Task OnInitializedAsync()
+    {
+        contestAttempt.ContestId = Convert.ToInt32(contestID);
+        contestAttempt.ParticipantId = Convert.ToInt32(participantid);
+        contest = await Http.GetJsonAsync<Contest>(GlobalSetting.baseAddress + "api/Contests/" + contestID);
+        questions = (await Http.GetJsonAsync<Question[]>(GlobalSetting.baseAddress + "api/Questions")).Where(x => x.ContestId == Convert.ToInt32(contestID)).ToArray();
+        timeleft_s = 60 * contest.Duration;
+        questionAnswers = new QuestionAnswer[contest.NumOfQuestion];
+
+
+        QuestionInitialization();
+        countTime();
+    }
+
+    public async void countTime()
+    {
+        while (timeleft_s > 0)
+        {
+            timeleft_s--;
+            display_min = timeleft_s / 60;
+            display_s = timeleft_s % 60;
+            StateHasChanged();
+            await Task.Delay(1000);
+        }
+        Submit();
+    }
+
+    public void selectQuestion(int number)
+    {
+        questionAnswers[currentQuestion_index].Answer = chosenAnswer;
+        chosenAnswer = questionAnswers[number].Answer;
+        currentQuestion_index = number;
+        activeQuestion = questions[number];
+        this.StateHasChanged();
+    }
+
+
+}
+
+@functions{
+    public void QuestionInitialization()
+    {
+        for (i = 0; i < contest.NumOfQuestion; i++)
+        {
+            questionAnswers[i] = new QuestionAnswer();
+            questionAnswers[i].QuestionId = questions[i].Id;
+
+        }
+        activeQuestion = questions[0];
+    }
+    public async void Submit()
+    {
+        var response = await Http.PostReturnStringID(GlobalSetting.baseAddress + "api/ContestAttempts", contestAttempt);
+        for (i = 0; i < contest.NumOfQuestion; i++)
+        {
+            questionAnswers[i].ContestAttemptId = response;
+            await Http.PostJsonAsync(GlobalSetting.baseAddress + "api/QuestionAnswers", questionAnswers[i]);
+            NavigationManager.NavigateTo("/");
+        }
+    }
+}

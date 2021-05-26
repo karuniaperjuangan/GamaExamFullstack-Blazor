@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
 
 <div class="page">
     <MatThemeProvider Theme="@theme">
@@ -8,7 +9,7 @@
 
         <div class="main">
             <div class="top-row px-4">
-                <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+                <MatButton OnClick="Logout" Label="Log Out"></MatButton>
             </div>
 
             <div class="content px-4">
@@ -25,4 +26,10 @@
         Primary = "green",
         Secondary = "orange"
     };
+    void Logout()
+    {
+        GlobalLoginState.LoggedCreatorID = -1;
+        GlobalLoginState.LoggedParticipantID = -1;
+        NavigationManager.NavigateTo("/");
+    }
 }

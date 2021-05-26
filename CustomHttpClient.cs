@@ -19,6 +19,17 @@ namespace GamaExamFullstack.Data
                 return obj; 
 
         }
+
+        public async Task<int> PostReturnStringID<T>(string requestUri, T content)
+        {
+            string myContent = JsonConvert.SerializeObject(content);
+            StringContent stringContent = new StringContent(myContent, Encoding.UTF8, "application/json");
+            var response = await (await httpClient.PostAsync(requestUri, stringContent)).Content.ReadAsStringAsync();
+            Console.WriteLine("Post success with ID"+response);
+            return Convert.ToInt32(response);
+        }
+
+
         public async Task<HttpResponseMessage> PostJsonAsync<T>(string requestUri, T content)
         {
             string myContent = JsonConvert.SerializeObject(content);
@@ -36,7 +47,7 @@ namespace GamaExamFullstack.Data
 
         private static readonly HttpClient httpClient = new HttpClient
         {
-            BaseAddress = new Uri("http://localhost:5001")
+            BaseAddress = new Uri(GlobalSetting.baseAddress)
         };
 
         private static readonly JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions

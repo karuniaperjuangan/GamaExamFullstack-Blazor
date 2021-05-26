@@ -35,7 +35,6 @@ namespace GamaExamFullstack
             services.AddDbContext<DBExamContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));
             services.AddHttpClient();
-            services.AddSingleton<WeatherForecastService>();
             services.AddSingleton<CustomHttpClient>();
             services.AddSingleton<AppSettingsService>();
             services.AddMatToaster(config =>
