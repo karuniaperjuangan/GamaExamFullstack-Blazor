@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GamaExamFullstack.Migrations
 {
     [DbContext(typeof(DBExamContext))]
-    [Migration("20210525071103_Web Migration")]
+    [Migration("20210526152526_Web Migration")]
     partial class WebMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -149,11 +149,14 @@ namespace GamaExamFullstack.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("QuestionText")
-                        .HasColumnType("nvarchar(400)");
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("TrueAnswer")
                         .IsRequired()
                         .HasColumnType("char(1)");
+
+                    b.Property<string>("imageURL")
+                        .HasColumnType("nvarchar(300)");
 
                     b.HasKey("Id");
 

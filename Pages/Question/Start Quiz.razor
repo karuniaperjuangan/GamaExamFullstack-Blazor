@@ -17,6 +17,10 @@
             <MatPaper Elevation="4" Rounded="true" Style="padding:10px">
                 <MatH5>@contest.Title</MatH5>
                 <MatH4>@("Soal No"+(currentQuestion_index+1).ToString())</MatH4>
+                @if (activeQuestion.imageURL != "" && activeQuestion.imageURL != null)
+                {
+                    <img alt="Gambar Soal dengan id @activeQuestion.Id.ToString()" src="@activeQuestion.imageURL" class="gambarsoal" />
+                }
                 <MatSubtitle1>@activeQuestion.QuestionText</MatSubtitle1>
                 <MatRadioGroup @bind-Value="@chosenAnswer" TValue="char">
                     <MatRadioButton Value="@('A')" TValue="char">@activeQuestion.Answers_A</MatRadioButton>
@@ -30,7 +34,12 @@
                     <MatRadioButton Value="@('E')" TValue="char">@activeQuestion.Answers_E</MatRadioButton>
                     <p><br /></p>
                 </MatRadioGroup>
-                <MatButton Raised="true" OnClick="Submit" Label="Submit Answer"></MatButton>
+                <div class="d-md-inline-block">
+                    <MatButton Raised="true" OnClick="selectPrevious" Label="Previous" Class="float-left" Style="margin:10px"></MatButton>
+                    <MatButton Raised="true" OnClick="selectNext" Label="Next" Class="float-left" Style="margin:10px"></MatButton>
+                    <MatButton Raised="true" OnClick="Submit" Label="Submit Answer" Class="float-right" Style="margin:10px"></MatButton>
+                </div>
+                
             </MatPaper>
         </div>
         <div class="col-lg-4">
@@ -65,11 +74,12 @@
     ContestAttempt contestAttempt = new ContestAttempt();
     Question[] questions;
     QuestionAnswer[] questionAnswers;
-    int timeleft_s, display_min, display_s, i, currentQuestion_index = 0;
+    int timeleft_s, display_min, display_s, i,j, currentQuestion_index = 0;
     char chosenAnswer;
 
     protected override async Task OnInitializedAsync()
     {
+
         contestAttempt.ContestId = Convert.ToInt32(contestID);
         contestAttempt.ParticipantId = Convert.ToInt32(participantid);
         contest = await Http.GetJsonAsync<Contest>(GlobalSetting.baseAddress + "api/Contests/" + contestID);
@@ -103,7 +113,16 @@
         activeQuestion = questions[number];
         this.StateHasChanged();
     }
-
+    public void selectPrevious()
+    {
+        if (currentQuestion_index == 0) Toaster.Add("This is the first question", MatToastType.Warning);
+        else selectQuestion(currentQuestion_index - 1);
+    }
+    public void selectNext()
+    {
+        if (currentQuestion_index == (contest.NumOfQuestion-1)) Toaster.Add("This is the last question", MatToastType.Warning);
+        else selectQuestion(currentQuestion_index + 1);
+    }
 
 }
 
@@ -123,9 +142,25 @@
         var response = await Http.PostReturnStringID(GlobalSetting.baseAddress + "api/ContestAttempts", contestAttempt);
         for (i = 0; i < contest.NumOfQuestion; i++)
         {
+            questionAnswers[currentQuestion_index].Answer = chosenAnswer; //Jangan lupa karena ini nomor terakhir, maka harus diset dahulu agar jawaban terakhir tetap tersimpan
+            CalculateScore();
             questionAnswers[i].ContestAttemptId = response;
             await Http.PostJsonAsync(GlobalSetting.baseAddress + "api/QuestionAnswers", questionAnswers[i]);
+            Toaster.Add("Successfully Submitted\n" + "Your Score is :"+contestAttempt.score, MatToastType.Success);
             NavigationManager.NavigateTo("/");
         }
+    }
+    public void CalculateScore()
+    {
+        contestAttempt.RightAnswer = 0;
+        for (j = 0; j < contest.NumOfQuestion; j++)
+        {
+            if(questionAnswers[j].Answer == questions[j].TrueAnswer)
+            {
+                contestAttempt.RightAnswer += 1;
+            }
+
+        }
+        contestAttempt.score = (contestAttempt.RightAnswer) * 100 / (contest.NumOfQuestion);
     }
 }

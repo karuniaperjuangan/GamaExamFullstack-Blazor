@@ -14,7 +14,7 @@
 
 <div>
     <MatHeadline6 Class="text-center">Create New Question</MatHeadline6>
-    <MatTextField @bind-Value="@question.QuestionText" Label="Contest Title" FullWidth="true"> </MatTextField>
+    <MatTextField @bind-Value="@question.QuestionText" Label="Question Text" FullWidth="true"> </MatTextField>
     <p><br />Correct Answer:</p>
     <MatSelectItem @bind-Value="@question.TrueAnswer" Items="@Choice" Label="Correct Answer" TValue="char"> </MatSelectItem>
     <p>
@@ -31,6 +31,9 @@
     </p>
     <p>
         <MatTextField @bind-Value="@question.Answers_E" Label="Choice E" FullWidth="true"></MatTextField>
+    </p>
+    <p>
+        <MatTextField @bind-Value="@question.imageURL" Label="Image URL (Optional)" FullWidth="true"></MatTextField>
     </p>
 
 

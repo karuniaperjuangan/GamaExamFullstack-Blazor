@@ -12,7 +12,7 @@ namespace GamaExamFullstack.Data
         [Key]
         public int Id { get; set; }
 
-        [Column(TypeName = "nvarchar(400)")]
+        [Column(TypeName = "nvarchar(500)")]
         public string QuestionText { get; set; }
 
         [Column(TypeName = "nvarchar(200)")]
@@ -29,6 +29,9 @@ namespace GamaExamFullstack.Data
 
         [Column(TypeName = "nvarchar(200)")]
         public string Answers_E { get; set; }
+
+        [Column(TypeName = "nvarchar(300)")]
+        public string? imageURL { get; set; }
 
         [Column(TypeName = "char(1)")]
         public char TrueAnswer { get; set; }

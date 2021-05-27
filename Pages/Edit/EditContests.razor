@@ -28,12 +28,19 @@
             <th>Id</th>
             <th>Question Text</th>
             <th>Correct Answer</th>
+            <th>Image</th>
             <th>Edit/Delete</th>
         </MatTableHeader>
         <MatTableRow>
             <td>@context.Id</td>
             <td>@context.QuestionText</td>
             <td>@context.TrueAnswer</td>
+            <td>
+                @if(context.imageURL != "" && context.imageURL != null)
+                {
+                    <img alt="Gambar Soal dengan id @context.Id.ToString()" src="@context.imageURL" class="gambarsoal"/>
+                }
+            </td>
             <td>
                 <MatButton Link=@("/edit/question/"+context.Id) Raised="true">Edit</MatButton>
                 <MatButton OnClick="()=>Delete(context.Id)" Raised="true">Delete</MatButton>
@@ -79,6 +86,5 @@
         await Http.PutJsonAsync(GlobalSetting.baseAddress + "api/Contests/" + id, contest);
         NavigationManager.NavigateTo("edit/contest/{id}", forceLoad: true);
     }
-
 
     }

@@ -147,11 +147,14 @@ namespace GamaExamFullstack.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("QuestionText")
-                        .HasColumnType("nvarchar(400)");
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("TrueAnswer")
                         .IsRequired()
                         .HasColumnType("char(1)");
+
+                    b.Property<string>("imageURL")
+                        .HasColumnType("nvarchar(300)");
 
                     b.HasKey("Id");
 

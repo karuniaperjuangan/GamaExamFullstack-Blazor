@@ -94,12 +94,13 @@ namespace GamaExamFullstack.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    QuestionText = table.Column<string>(type: "nvarchar(400)", nullable: true),
+                    QuestionText = table.Column<string>(type: "nvarchar(500)", nullable: true),
                     Answers_A = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     Answers_B = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     Answers_C = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     Answers_D = table.Column<string>(type: "nvarchar(200)", nullable: true),
                     Answers_E = table.Column<string>(type: "nvarchar(200)", nullable: true),
+                    imageURL = table.Column<string>(type: "nvarchar(300)", nullable: true),
                     TrueAnswer = table.Column<string>(type: "char(1)", nullable: false),
                     ContestId = table.Column<int>(type: "int", nullable: false)
                 },
