@@ -14,12 +14,12 @@
     <p></p>
     <MatTextField @bind-Value="@contest.Duration" Label="Duration in Minutes" TValue="int" Icon="access_time"></MatTextField>
     <p><br /></p>
-    <div class="d-inline-flex">
-        <MatButton Raised="true" OnClick="@UpdateContest" Style="float:left;">Edit</MatButton>
-        <MatButton Raised="true" OnClick="@Cancel" Style="float:right">Cancel</MatButton>
+    <div class="d-inline-flex" style="width:200px;justify-content:space-between">
+        <MatButton Raised="true" OnClick="@UpdateContest">Edit</MatButton>
+        <MatButton Raised="true" OnClick="@Cancel" >Cancel</MatButton>
     </div>
 
-    
+    <p><br /></p>
 
     <MatTable Items="@questions" class="mat-elevation-z5">
         <MatTableHeader>
@@ -55,6 +55,8 @@
     Contest contest = new Contest();
     Question[] questions;
     Question[] allquestions;
+    QuestionAnswer[] questionAnswers;
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -80,6 +82,11 @@
     protected async Task Delete(int Id)
     {
         contest.NumOfQuestion -= 1;
+        questionAnswers = (await Http.GetJsonAsync<QuestionAnswer[]>(GlobalSetting.baseAddress + "api/QuestionAnswers")).Where(x => x.QuestionId == Convert.ToInt32(Id)).ToArray();
+        foreach(var item in questionAnswers) //Agar tidak terjadi error
+        {
+            await Http.DeleteAsync(GlobalSetting.baseAddress + "api/QuestionAnswers/" + Convert.ToString(item.Id));
+        }
         await Http.DeleteAsync(GlobalSetting.baseAddress + "api/Questions/" + Convert.ToString(Id));
         await Http.PutJsonAsync(GlobalSetting.baseAddress + "api/Contests/" + id, contest);
         NavigationManager.NavigateTo("edit/contest/"+id, forceLoad: true);

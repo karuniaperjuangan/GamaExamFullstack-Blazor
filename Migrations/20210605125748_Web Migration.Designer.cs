@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GamaExamFullstack.Migrations
 {
     [DbContext(typeof(DBExamContext))]
-    [Migration("20210526152526_Web Migration")]
+    [Migration("20210605125748_Web Migration")]
     partial class WebMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -14,6 +14,7 @@
 
 <div>
     <MatHeadline6 Class="text-center">Create New Question</MatHeadline6>
+    <p><br /></p>
     <MatTextField @bind-Value="@question.QuestionText" Label="Question Text" FullWidth="true"> </MatTextField>
     <p><br />Correct Answer:</p>
     <MatSelectItem @bind-Value="@question.TrueAnswer" Items="@Choice" Label="Correct Answer" TValue="char"> </MatSelectItem>
@@ -37,8 +38,8 @@
     </p>
 
 
-    <div class="d-md-inline-block">
-        <MatButton Raised="true" OnClick="@AddQuestion" Style="float:left;">Add Question</MatButton>
+    <div class="d-inline-flex" style="width:200px;justify-content:space-between">
+        <MatButton Raised="true" OnClick="@AddQuestion" Style="float:left;">Save</MatButton>
         <MatButton Raised="true" OnClick="@Cancel" Style="float:right;">Cancel</MatButton>
     </div>
 

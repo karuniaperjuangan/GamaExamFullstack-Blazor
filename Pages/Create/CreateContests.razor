@@ -14,12 +14,13 @@
 <div>
     <MatPaper Class="matcard-centered" Style="box-shadow: 10px">
         <MatHeadline6 Class="text-center">Create New Contest</MatHeadline6>
-        <MatTextField @bind-Value="@contest.Title" Label="Contest Title" Icon="text_fields"></MatTextField>
+        <p><br /></p>
+        <MatTextField @bind-Value="@contest.Title" Label="Contest Title" Icon="text_fields" FullWidth="true"></MatTextField>
         <p></p>
-        <MatTextField @bind-Value="@contest.Duration" Label="Duration in Minutes" TValue="int" Icon="access_time"></MatTextField>
+        <MatTextField @bind-Value="@contest.Duration" Label="Duration in Minutes" TValue="int" Icon="access_time" FullWidth="true"></MatTextField>
 
 
-        <div class="d-md-inline-block">
+        <div class="d-inline-flex" style="width:200px;justify-content:space-between">
             <MatButton Raised="true" OnClick="@AddContest" Style="float:left;">Add Contest</MatButton>
             <MatButton Raised="true" OnClick="@Cancel" Style="float:right;">Cancel</MatButton>
         </div>
