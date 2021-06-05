@@ -61,7 +61,6 @@
     {
         contest = await Http.GetJsonAsync<Contest>(GlobalSetting.baseAddress + "api/Contests/" + contestID);
         contest.NumOfQuestion += 1;
-
     }
 
 
@@ -69,14 +68,12 @@
     {
         try
         {
-
             await Http.PutJsonAsync(GlobalSetting.baseAddress + "api/Contests/" + contestID, contest);
             await Http.PostJsonAsync(GlobalSetting.baseAddress + "api/Questions", question);
             
             NavigationManager.NavigateTo("/edit/contest/" + contestID);
         }
-
-        catch (Exception) { Toaster.Add("Failed to Add", MatToastType.Danger); }
+        catch { }
 
     }
     void Cancel()

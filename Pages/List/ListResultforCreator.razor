@@ -1,0 +1,56 @@
+﻿@using GamaExamFullstack.Data
+
+@page "/listresult/contest/{id}"
+
+@inject CustomHttpClient Http
+@inject NavigationManager NavigationManager
+@inject AppSettingsService AppSettingsService
+@inject IMatToaster Toaster
+
+<MatH4>@contest.Title</MatH4>
+<MatDivider></MatDivider>
+
+<p><br /><br /></p>
+<MatH6>Contest Result</MatH6>
+<MatTable Items="@contestAttempts" class="mat-elevation-z5">
+    <MatTableHeader>
+        <th>Id</th>
+        <th>Participant Name</th>
+        <th>Correct Answer</th>
+        <th>Result</th>
+    </MatTableHeader>
+    <MatTableRow>
+        <td>@context.Id</td>
+        <td>@(Task.Run(() => SearchParticipantName(context.ParticipantId)).Result)</td>  <!-- Karena dijalankan secara async, yang dipanggil adalah result dari Task.Run -->
+        <td>@context.RightAnswer</td>
+        <td>@context.score</td>
+    </MatTableRow>
+</MatTable>
+<MatDivider></MatDivider>
+<MatButton Link=@("/homepage/creator/"+contest.CreatorId)>Return to Homepage</MatButton>
+
+
+@code {
+    [Parameter]
+    public string id { get; set; }
+    private readonly DBExamContext _context;
+
+    Contest contest = new Contest();
+    ContestAttempt[] contestAttempts;
+    string baseUrl;
+
+    protected override async Task OnInitializedAsync()
+    {
+        contest = await Http.GetJsonAsync<Contest>(GlobalSetting.baseAddress + "api/Contests/" + id);
+        contestAttempts = (await Http.GetJsonAsync<ContestAttempt[]>(GlobalSetting.baseAddress + "api/ContestAttempts")).Where(x => x.ContestId == Convert.ToInt32(id)).ToArray();
+
+    }
+    public async Task<string> SearchParticipantName(int participantID) //Harus async karena mengambil data dari DB
+    {
+        var response = await Http.GetJsonAsync<DParticipant>(GlobalSetting.baseAddress + "api/DParticipants/" + Convert.ToString(participantID));
+        if (response == null) return "";
+        return response.name;
+    }
+
+
+}

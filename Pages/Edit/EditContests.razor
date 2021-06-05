@@ -15,7 +15,7 @@
     <MatTextField @bind-Value="@contest.Title" Label="Contest Title"></MatTextField>
     <p></p>
     <MatTextField @bind-Value="@contest.Duration" Label="Duration in Minutes" TValue="int"></MatTextField>
-
+    <p><br /></p>
     <div class="d-inline-block">
         <MatButton Raised="true" OnClick="@UpdateContest" Style="float:left;">Edit</MatButton>
         <MatButton Raised="true" OnClick="@Cancel" Style="float:right">Cancel</MatButton>
@@ -84,7 +84,7 @@
         contest.NumOfQuestion -= 1;
         await Http.DeleteAsync(GlobalSetting.baseAddress + "api/Questions/" + Convert.ToString(Id));
         await Http.PutJsonAsync(GlobalSetting.baseAddress + "api/Contests/" + id, contest);
-        NavigationManager.NavigateTo("edit/contest/{id}", forceLoad: true);
+        NavigationManager.NavigateTo("edit/contest/"+id, forceLoad: true);
     }
 
     }

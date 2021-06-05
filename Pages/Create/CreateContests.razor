@@ -51,7 +51,6 @@
         {
             contest.NumOfQuestion = 0;
             var response = await Http.PostJsonAsync(GlobalSetting.baseAddress + "api/Contests", contest);
-            if(response.IsSuccessStatusCode == false) Toaster.Add("Failed to add. Please try again", MatToastType.Danger);
             NavigationManager.NavigateTo("/homepage/creator/"+creatorID);
         }
         else Toaster.Add("Please do not leave any field empty", MatToastType.Danger);

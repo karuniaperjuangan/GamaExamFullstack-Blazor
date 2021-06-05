@@ -16,7 +16,7 @@
         <div class="col-lg-8 mb-4">
             <MatPaper Elevation="4" Rounded="true" Style="padding:10px">
                 <MatH5>@contest.Title</MatH5>
-                <MatH4>@("Soal No"+(currentQuestion_index+1).ToString())</MatH4>
+                <MatH4>@("Soal No "+(currentQuestion_index+1).ToString())</MatH4>
                 @if (activeQuestion.imageURL != "" && activeQuestion.imageURL != null)
                 {
                     <img alt="Gambar Soal dengan id @activeQuestion.Id.ToString()" src="@activeQuestion.imageURL" class="gambarsoal" />
@@ -45,14 +45,16 @@
         <div class="col-lg-4">
             <MatPaper Elevation="4" Style="width:300px" Rounded="true">
                 <MatBody1 Style="text-align:center;">Time Left</MatBody1>
-                <MatBody2 Style="text-align:center;">@(display_min.ToString("D2")+":"+display_s.ToString("D2"))</MatBody2>
+                <MatBody2 Style="text-align:center;">@(display_min.ToString("D2")+":"+display_s.ToString("D2"))</MatBody2> <!-- Counter Waktu -->
             </MatPaper>
             <p><br /></p>
             <div class="mat-elevation-z4 " style="width:300px;">
                 @{IEnumerable<int> NumberCount = Enumerable.Range(0, contest.NumOfQuestion); }
                 @foreach (int number in NumberCount)
                 {
-                    <MatButton OnClick="()=>selectQuestion(number)" Raised="true" Class="pilih">@(number+1)&nbsp;</MatButton>
+                <button class="btn-outline-primary pilih" @onclick="()=>selectQuestion(number)" style="background:@((questionAnswers[number].Answer != 0)?"green":"orange")"> <!-- Untuk penanda sudah atau belum dikerjakan, kita mengatur warna dengan ternary C#-->
+                    @(number+1)&nbsp; <!-- Karena Enumerable NumberCount dimulai dari 0, kita perlu menambah 1 -->
+                </button>
                 }
             </div>
 
@@ -70,11 +72,12 @@
 
     Contest contest = new Contest();
     Question activeQuestion = new Question();
+    DParticipant participant = new DParticipant();
 
     ContestAttempt contestAttempt = new ContestAttempt();
     Question[] questions;
     QuestionAnswer[] questionAnswers;
-    int timeleft_s, display_min, display_s, i,j, currentQuestion_index = 0;
+    int timeleft_s, display_min, display_s, i,j, currentQuestion_index = 0; //timeleft adalah waktu tersisa dalam detik, display_min dan display_s adalah sisa yang ditampilkan di layar
     char chosenAnswer;
 
     protected override async Task OnInitializedAsync()
@@ -83,8 +86,9 @@
         contestAttempt.ContestId = Convert.ToInt32(contestID);
         contestAttempt.ParticipantId = Convert.ToInt32(participantid);
         contest = await Http.GetJsonAsync<Contest>(GlobalSetting.baseAddress + "api/Contests/" + contestID);
+        participant = await Http.GetJsonAsync<DParticipant>(GlobalSetting.baseAddress + "api/DParticipants/" + participantid);
         questions = (await Http.GetJsonAsync<Question[]>(GlobalSetting.baseAddress + "api/Questions")).Where(x => x.ContestId == Convert.ToInt32(contestID)).ToArray();
-        timeleft_s = 60 * contest.Duration;
+        timeleft_s = 60 * contest.Duration; //Duration adalah menit, harus dikonversi ke sekon
         questionAnswers = new QuestionAnswer[contest.NumOfQuestion];
 
 
@@ -107,17 +111,19 @@
 
     public void selectQuestion(int number)
     {
-        questionAnswers[currentQuestion_index].Answer = chosenAnswer;
+        questionAnswers[currentQuestion_index].Answer = chosenAnswer; //simpan jawaban dulu
         chosenAnswer = questionAnswers[number].Answer;
         currentQuestion_index = number;
         activeQuestion = questions[number];
-        this.StateHasChanged();
+        this.StateHasChanged(); //Update render page
     }
+    //Tombol klik sebelumnya
     public void selectPrevious()
     {
         if (currentQuestion_index == 0) Toaster.Add("This is the first question", MatToastType.Warning);
         else selectQuestion(currentQuestion_index - 1);
     }
+    //Tombol klik selanjutnya
     public void selectNext()
     {
         if (currentQuestion_index == (contest.NumOfQuestion-1)) Toaster.Add("This is the last question", MatToastType.Warning);
@@ -133,22 +139,26 @@
         {
             questionAnswers[i] = new QuestionAnswer();
             questionAnswers[i].QuestionId = questions[i].Id;
-
         }
         activeQuestion = questions[0];
     }
     public async void Submit()
     {
+        questionAnswers[currentQuestion_index].Answer = chosenAnswer; //Jangan lupa karena ini nomor terakhir, maka harus diset dahulu agar jawaban terakhir tetap tersimpan
         var response = await Http.PostReturnStringID(GlobalSetting.baseAddress + "api/ContestAttempts", contestAttempt);
         for (i = 0; i < contest.NumOfQuestion; i++)
         {
-            questionAnswers[currentQuestion_index].Answer = chosenAnswer; //Jangan lupa karena ini nomor terakhir, maka harus diset dahulu agar jawaban terakhir tetap tersimpan
-            CalculateScore();
+
             questionAnswers[i].ContestAttemptId = response;
             await Http.PostJsonAsync(GlobalSetting.baseAddress + "api/QuestionAnswers", questionAnswers[i]);
-            Toaster.Add("Successfully Submitted\n" + "Your Score is :"+contestAttempt.score, MatToastType.Success);
-            NavigationManager.NavigateTo("/");
+
         }
+        contestAttempt = await Http.GetJsonAsync<ContestAttempt>(GlobalSetting.baseAddress + "api/ContestAttempts/" + response); //Harus diget lagi karena entah ketika dihilangkan, tidak mau diupdate skornya 
+        CalculateScore();
+
+        Toaster.Add("Successfully Submitted!" + " You got " + contestAttempt.score, MatToastType.Success);
+        await Http.PutJsonAsync(GlobalSetting.baseAddress + "api/ContestAttempts/" + response, contestAttempt); //Update skor di server
+        NavigationManager.NavigateTo("/homepage/participants/"+participantid);
     }
     public void CalculateScore()
     {
@@ -163,4 +173,5 @@
         }
         contestAttempt.score = (contestAttempt.RightAnswer) * 100 / (contest.NumOfQuestion);
     }
+
 }

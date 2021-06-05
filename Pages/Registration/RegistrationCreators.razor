@@ -12,22 +12,26 @@
 
 
 <div>
-    <MatCard Class="matcard-centered" Style="box-shadow: 10px">
+    <MatPaper Style="background-color:white;box-shadow: 10px;" Class="matcard-centered">
         <MatHeadline6 Class="text-center">Creator Registration</MatHeadline6>
-        <MatTextField @bind-Value="@creator.username" Label="Username"></MatTextField>
+        <MatTextField @bind-Value="@creator.username" Label="Username" Icon="people" FullWidth="true"></MatTextField>
         <p></p>
-        <MatTextField @bind-Value="@creator.name" Label="Name"></MatTextField>
+        <MatTextField @bind-Value="@creator.name" Label="Name" Icon="people" FullWidth="true"></MatTextField>
         <p></p>
-        <MatTextField @bind-Value="@creator.institute" Label="Institute"></MatTextField>
+        <MatTextField @bind-Value="@creator.institute" Label="Institute" Icon="school" FullWidth="true"></MatTextField>
         <p></p>
-        <MatTextField @bind-Value="@creator.password" Label="Password" Type="password"></MatTextField>
+        <MatTextField @bind-Value="@creator.password" Label="Password" Type="password" Icon="lock" FullWidth="true"></MatTextField>
         <p></p>
-        <div class="d-inline-block">
-            <MatButton Raised="true" OnClick="@RegisterCreator" Style="float:left;">Create Account</MatButton>
-            <MatButton Raised="true" OnClick="@Cancel" Style="float:right;">Cancel</MatButton>
+        <div class="d-inline">
+            <div style="float:left">
+                <MatButton Raised="true" OnClick="@RegisterCreator" Style="float:left;">Create Account</MatButton>
+            </div>
+            <div style="float:right">
+                <MatButton Raised="true" OnClick="@Cancel" Style="float:right;">Cancel</MatButton>
+            </div>   
         </div>
 
-    </MatCard>
+    </MatPaper>
 </div>
 
 

@@ -76,6 +76,7 @@ namespace GamaExamFullstack.Data
         [HttpPost]
         public async Task<ActionResult<Question>> PostQuestion(Question question)
         {
+            question.Contest = await _context.dContests.FindAsync(question.ContestId);
             _context.dQuestions.Add(question);
             await _context.SaveChangesAsync();
 

@@ -21,6 +21,7 @@
         <th>Title</th>
         <th>Duration (Minutes)</th>
         <th>Number of Questions</th>
+        <th>Result</th>
         <th>Manage</th>
     </MatTableHeader>
     <MatTableRow>
@@ -28,6 +29,9 @@
         <td>@context.Title</td>
         <td>@context.Duration</td>
         <td>@context.NumOfQuestion</td>
+        <td>
+            <MatButton Link=@("/listresult/contest/"+context.Id) Raised="true" Disabled=@(context.CreatorId!=Convert.ToInt32(id))>Check</MatButton>
+        </td>
         <td>
             <MatButton Link=@("/edit/contest/"+context.Id) Raised="true" Disabled=@(context.CreatorId!=Convert.ToInt32(id))>Manage</MatButton>
         </td>
