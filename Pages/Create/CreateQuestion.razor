@@ -33,11 +33,11 @@
         <MatTextField @bind-Value="@question.Answers_E" Label="Choice E" FullWidth="true"></MatTextField>
     </p>
     <p>
-        <MatTextField @bind-Value="@question.imageURL" Label="Image URL (Optional)" FullWidth="true"></MatTextField>
+        <MatTextField @bind-Value="@question.imageURL" Label="Image URL (Optional)" FullWidth="true"  Icon="photo"></MatTextField>
     </p>
 
 
-    <div class="d-inline">
+    <div class="d-md-inline-block">
         <MatButton Raised="true" OnClick="@AddQuestion" Style="float:left;">Add Question</MatButton>
         <MatButton Raised="true" OnClick="@Cancel" Style="float:right;">Cancel</MatButton>
     </div>

@@ -7,24 +7,22 @@
 @inject AppSettingsService AppSettingsService
 @inject IMatToaster Toaster
 
-<h3>Edit Creator</h3>
-
 <div>
-    <MatCard Class="matcard-centered" Style="box-shadow: 10px">
+    <MatPaper Class="matcard-centered" Style="box-shadow: 10px">
         <MatHeadline6 Class="text-center">Edit Participants</MatHeadline6>
-        <MatTextField @bind-Value="@participants.name" Label="Name"></MatTextField>
+        <MatTextField @bind-Value="@participants.name" Label="Name" Icon="people" FullWidth="true"></MatTextField>
         <p></p>
-        <MatTextField @bind-Value="@participants.institute" Label="Institute"></MatTextField>
+        <MatTextField @bind-Value="@participants.institute" Label="Institute" Icon="school" FullWidth="true"></MatTextField>
         <p></p>
-        <MatTextField @bind-Value="@participants.password" Label="Password" Type="password"></MatTextField>
+        <MatTextField @bind-Value="@participants.password" Label="Password" Type="password" Icon="lock" FullWidth="true"></MatTextField>
         <p></p>
-        <div class="d-inline-block">
+        <div class="d-inline">
             <MatButton Raised="true" OnClick="@UpdateParticipant" Style="float:left;">Edit</MatButton>
             <MatButton Raised="true" OnClick="@Cancel" Style="float:right">Cancel</MatButton>
 
         </div>
 
-    </MatCard>
+    </MatPaper>
 </div>
 
 @code {
@@ -50,7 +48,7 @@
     }
     void Cancel()
     {
-        NavigationManager.NavigateTo("listparticipants");
+        NavigationManager.NavigateTo("/homepage/participants/" + id);
     }
 
     protected async Task Delete()

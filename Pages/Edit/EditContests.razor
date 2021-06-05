@@ -7,16 +7,14 @@
 @inject AppSettingsService AppSettingsService
 @inject IMatToaster Toaster
 
-<h3>Edit Contest</h3>
-
 <div>
 
     <MatHeadline6 Class="text-center">Edit Contest</MatHeadline6>
-    <MatTextField @bind-Value="@contest.Title" Label="Contest Title"></MatTextField>
+    <MatTextField @bind-Value="@contest.Title" Label="Contest Title" Icon="text_fields"></MatTextField>
     <p></p>
-    <MatTextField @bind-Value="@contest.Duration" Label="Duration in Minutes" TValue="int"></MatTextField>
+    <MatTextField @bind-Value="@contest.Duration" Label="Duration in Minutes" TValue="int" Icon="access_time"></MatTextField>
     <p><br /></p>
-    <div class="d-inline-block">
+    <div class="d-inline-flex">
         <MatButton Raised="true" OnClick="@UpdateContest" Style="float:left;">Edit</MatButton>
         <MatButton Raised="true" OnClick="@Cancel" Style="float:right">Cancel</MatButton>
     </div>
