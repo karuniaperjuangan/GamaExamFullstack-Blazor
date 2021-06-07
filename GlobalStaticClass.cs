@@ -9,7 +9,7 @@ namespace GamaExamFullstack
 {
     public static class GlobalSetting
     {
-        public static string baseAddress = "https://gamaexam.azurewebsites.net";
+        public static string baseAddress = "https://localhost:5001/";
         
     }
     public static class GlobalLoginState
